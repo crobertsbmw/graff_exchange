@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+
+    <link rel=apple-touch-icon sizes=180x180 href=/static/favicon/apple-touch-icon.png>
+    <link rel=icon type=image/png sizes=32x32 href=/static/favicon/favicon-32x32.png>
+    <link rel=icon type=image/png sizes=16x16 href=/static/favicon/favicon-16x16.png>
+    <link rel=manifest href=/static/favicon/site.webmanifest>
+    <link rel=mask-icon href=/static/favicon/safari-pinned-tab.svg color=#5bbad5>
+    <link rel="shortcut icon" href=/static/favicon/favicon.ico>
+    <meta name=msapplication-TileColor content=#ffffff>
+    <meta name=msapplication-config content=/static/favicon/browserconfig.xml>
+    <meta name=theme-color content=#ffffff>
+
+    <title>GraffExchange.com</title>
+    <link href=/static/css/uikit.min.css rel=stylesheet>
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/uikit@latest/dist/css/uikit.min.css">
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script>
+
+    <!-- https://zzseba78.github.io/Kick-Off/marketing.html -->
+    
+<style>
+
+.top-wrap::before, .overlay-wrap::before {
+  position: absolute;
+  top:0;
+  right:0;
+  left: 0;
+  bottom: 0;
+  content: '';
+  z-index: 1;
+  background-color: rgba(0,0,0,0.5);
+}
+.uk-light{
+  color: rgba(255,255,255,.9)
+}
+.top-wrap-height {
+  transition: height 0.25s;
+}
+.uk-subnav-pill > * > :first-child {
+    padding: 0.5rem 1rem;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.top-container {
+  z-index: 2;
+}
+.uk-logo img {
+  height: 38px;
+}
+.subtitle-text {
+  font-size: 1.2em;
+  opacity: 0.7;
+  font-weight: 300;
+}
+.logos-grid img {
+  display: block;
+  width: 60px;
+  margin: 0 auto;
+  filter:  grayscale(100%);
+  transition: filter 0.25s;
+}
+.logos-grid img:hover {
+  display: block;
+  width: 60px;
+  margin: 0 auto;
+  filter:  grayscale(0);
+}
+
+h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-heading-small, .uk-heading-medium, .uk-heading-large, .uk-heading-xlarge, .uk-heading-2xlarge {
+  font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Roboto,Arial,sans-serif;
+  font-weight: 300;
+  color: #222;
+  text-transform: none;
+}
+label {
+   color: #fff !important;
+}
+.uk-input {
+  color: #fff !important;
+  background: rgba(0,0,0,0) !important;
+}
+
+</style>
+</head>
+
+
+
+<body>
+    <!-- TOP -->
+    <div class="top-wrap uk-position-relative uk-light uk-background-secondary">
+      
+      <div class="uk-cover-container uk-light uk-flex uk-flex-middle top-wrap-height">
+        
+        <!-- TOP CONTAINER -->
+        <div class="uk-container uk-flex-auto top-container uk-position-relative uk-margin-medium-top">
+          <div class="uk-width-2-2">
+            <h3 class="uk-text-primary uk-margin-small-bottom">GraffExchange.com</h3>
+          </div>
+        </div>
+        <!-- /TOP CONTAINER -->
+
+
+        <!-- TOP IMAGE -->
+        <img src="/static/img/graff_background.jpg"
+        alt="" data-uk-cover data-uk-img data-uk-parallax="opacity: 1,0.1; easing:0"
+        >
+      </div>
+    </div>
+    <!-- /TOP -->
+    <section id="content" class="uk-section uk-section-default">
+      <div class="uk-container uk-margin-large-top">
+        <div class="uk-grid uk-flex-middle" data-uk-grid data-uk-scrollspy="target: > div; cls: uk-animation-slide-left-medium">
+              <div data-uk-scrollspy-class="uk-animation-slide-right-medium">
+                <h2 class="uk-margin-small-top">All Signed Up</h2>
+                <p class="subtitle-text">
+                   We will send you an email to <b style="color:#111">{{email}}</b> when you have been matched and give you further instruction.
+                </p>
+                <p class="subtitle-text">
+                   If you have any questions or comments then please reach out at <a href="mailto:(chase@graffexchange.com)">chase@graffexchange.com</a>.
+                </p>
+                
+              </div>
+            </div>
+      </div>
+    </section>
+      
+      <!-- LOGOS -->
+    <div class="uk-section uk-section-small uk-section-muted uk-margin-large">
+      <div class="uk-container uk-container-small"  data-uk-scrollspy="target: > div; delay: 150; cls: uk-animation-slide-bottom-medium">
+        <div class="uk-text-center">
+          <p class="subtitle-text">
+             <a href="/december/">View the December Exchange!</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <section class="uk-section uk-section-default">
+      <div class="uk-container uk-container-xsmall uk-text-center uk-section uk-padding-remove-top">
+<!--         <h5 class="uk-text-primary">DATES</h5>
+ -->        <h2 class="uk-margin-remove uk-h1">The Timetable</h2>
+      </div>
+      <div class="uk-container">
+        <div class="uk-grid uk-grid-large uk-child-width-1-4@m" data-uk-grid data-uk-scrollspy="target: > div; delay: 150; cls: uk-animation-slide-bottom-medium">
+          <div class="uk-text-center">
+            <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-3.svg" data-uk-img alt="Image"> -->
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Jan 9, 2020</h4>
+            <p>Sign Up By Thursday</p>
+          </div>
+          <div class="uk-text-center">
+           <!--  <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-4.svg" data-uk-img alt="Image"> -->
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Jan 10, 2020</h4>
+            <p>Get your assignment by Friday</p>
+          </div>
+          <div class="uk-text-center">
+            <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-5.svg" data-uk-img alt="Image"> -->
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Jan 13, 2020</h4>
+            <p>Upload your sketch by Monday.</p>
+          </div>
+          <div class="uk-text-center">
+            <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-5.svg" data-uk-img alt="Image"> -->
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Jan 17, 2020</h4>
+            <p>Review the results on Friday.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="uk-section uk-section-secondary uk-padding-remove-bottom">
+      <div class="uk-text-center uk-padding uk-padding-remove-horizontal">
+        <span class="uk-text-small uk-text-muted">© 2020 GraffExchange.com</span>
+      </div>
+    </footer>
+    <!-- /FOOTER -->
+  
+  </body>
+</html>
