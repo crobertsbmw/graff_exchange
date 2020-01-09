@@ -19,9 +19,9 @@ class User(AbstractUser):
         ordering = ['-date_joined',]
 
     def __str__(self):
-        if self.email and len(self.email)>2:
+        if self.moniker:
             return self.moniker
-        return self.username
+        return self.email
 
     points = models.IntegerField(default=0)
     level = models.IntegerField(default=0)
@@ -42,7 +42,7 @@ class Sketch(models.Model):
 
 class Assignment(models.Model):
     def __str__(self):
-        return user.moniker+" -> "+moniker+" ("+style+")"
+        return self.user.moniker+" -> "+self.moniker+" ("+self.style+")"
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     recipient = models.ForeignKey('User', related_name="favors", on_delete=models.CASCADE)
