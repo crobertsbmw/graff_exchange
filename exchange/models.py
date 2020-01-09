@@ -20,7 +20,7 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.email and len(self.email)>2:
-            return self.email+" "+self.username
+            return self.moniker
         return self.username
 
     points = models.IntegerField(default=0)
@@ -41,6 +41,8 @@ class Sketch(models.Model):
     datetime = models.DateTimeField(default=datetime.datetime.now)
 
 class Assignment(models.Model):
+    def __str__(self):
+        return user.moniker+" -> "+moniker+" ("+style+")"
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     recipient = models.ForeignKey('User', related_name="favors", on_delete=models.CASCADE)
