@@ -51,7 +51,7 @@ class Assignment(models.Model):
     moniker = models.CharField(max_length=255)
     password = models.CharField(max_length=10, default=rand_string)
     def upload_link(self):
-        return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.self.moniker.lower()+"/"+self.password+"/"
+        return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.password+"/"
 
 def month_year_string():
     return datetime.datetime.now().strftime("%b %Y")
