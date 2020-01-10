@@ -18,7 +18,7 @@ def upload_sketch(request, assignment_pk, tag, password):
     print(assignment_pk)
     print(tag)
     assignment = Assignment.objects.get(pk=assignment_pk)
-    if assignment.moniker != tag:
+    if assignment.moniker.lower() != tag.lower():
         raise Http404("Moniker doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")

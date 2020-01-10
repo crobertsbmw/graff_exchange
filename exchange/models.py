@@ -50,6 +50,8 @@ class Assignment(models.Model):
     rematch = models.BooleanField(default=False)
     moniker = models.CharField(max_length=255)
     password = models.CharField(max_length=10, default=rand_string)
+    def upload_link():
+        return "https://graffexchange.com/upload/"+self.pk+"/"+self.self.moniker.lower()+"/"self.password+"/"
 
 def month_year_string():
     return datetime.datetime.now().strftime("%b %Y")
