@@ -19,14 +19,13 @@ def upload_sketch(request, assignment_pk, tag, password):
     print(tag)
     assignment = Assignment.objects.get(pk=assignment_pk)
     if assignment.moniker.lower() != tag.lower():
-        raise Http404("Moniker doesn't exist")
+        raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
     if request.method == 'POST':
         files = request.FILES.getlist('sketches')
         for f in files:
-            Sketch(image=f, user=request.user, assignment=assignment).save()
-            print("saved")
+            Sketch(image=f, user=assignment.user, assignment=assignment).save()
     return render(request, 'upload.html', {
         "sketches": assignment.sketches.all(),
         "tag": assignment.moniker,
