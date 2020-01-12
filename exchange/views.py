@@ -15,17 +15,16 @@ def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
 
 def upload_sketch(request, assignment_pk, tag, password):
-    print(assignment_pk)
-    print(tag)
     assignment = Assignment.objects.get(pk=assignment_pk)
     if assignment.moniker.lower() != tag.lower():
         raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
     if request.method == 'POST':
+        time = request.POST.get("time")
         files = request.FILES.getlist('sketches')
         for f in files:
-            Sketch(image=f, user=assignment.user, assignment=assignment).save()
+            Sketch(image=f, user=assignment.user, assignment=assignment, time_spent=time).save()
     return render(request, 'upload.html', {
         "sketches": assignment.sketches.all(),
         "tag": assignment.moniker,

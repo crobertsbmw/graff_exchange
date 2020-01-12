@@ -39,6 +39,7 @@ class Sketch(models.Model):
     assignment = models.ForeignKey('Assignment', related_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('User', related_name="portfolio", on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=datetime.datetime.now)
+    time_spent = models.CharField(max_length=255, blank=True, null=True)
 
 class Assignment(models.Model):
     def __str__(self):
