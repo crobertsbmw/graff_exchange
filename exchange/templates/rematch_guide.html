@@ -14,7 +14,7 @@
     <meta name=msapplication-config content=/static/favicon/browserconfig.xml>
     <meta name=theme-color content=#ffffff>
 
-    <title>{{exchange.name}} | GraffExchange.com</title>
+    <title>Review Sketch | GraffExchange.com</title>
     <link href=/static/css/uikit.min.css rel=stylesheet>
 
     <!-- UIkit CSS -->
@@ -133,39 +133,46 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
       </div>
     </div>
     <!-- /TOP -->
+
     <section id="content" class="uk-section uk-section-default">
       <div class="uk-container">
-        <h1>{{exchange.name}} Exchange</h1>
-        <!--Slider -->
-        <!--Overlay -->
-        <div class="uk-child-width-1-2@s uk-child-width-1-3@l" uk-grid="masonry: true" uk-grid uk-lightbox="animation: slide">
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/avatar_xor.png" data-caption="Caption 1">
-                  <img src="/media/2020/01/05/avatar_xor.png" alt="">
-                  <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">
-                <p class="uk-h4 uk-margin-remove">Bottom</p>
-            </div>
-                </a>
-            </div>
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/avatar.png" data-caption="Caption 2">
-                  <img src="/media/2020/01/05/avatar.png" alt="">
-      <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">                    <p>Default Lorem</p>
+        <div class="uk-flex-middle">
+          {% for assignments in assignment_groups %}
+            <hr class="uk-divider-icon">
+            <div class="uk-child-width-1-4@m" uk-grid>
+              {% for assignment in assignments %}
+                <div class="uk-card uk-card-default" style="padding-left:0px;">
+                    <div class="uk-card-media-top">
+                      {% if assignment.sketches.all|length == 1 %}
+                        {% for sketch in assignment.sketches.all %}
+                          <div><img src="{{sketch.image.url}}"></div>
+                        {% endfor %}
+                      {% else %}
+                      {% for sketch in assignment.sketches.all %}
+                        <div class="uk-child-width-1-2 uk-grid-collapse" uk-grid>
+                          <div><img src="{{sketch.image.url}}"></div>
+                        </div>
+                      {% endfor %}
+                      {% endif %}
+                    </div>
+                    <div class="uk-card-body">
+                        <p>{{assignment.user.moniker}}→{{assignment.recipient.moniker}}</p>
+                    </div>
+                </div>
+                <!-- <div>
+                  <div class="uk-inline">
+                    <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center; justify-content:center;">
+                        {% for sketch in assignment.sketches.all %}
+                          <img src="{{sketch.image.url}}" alt="">
+                        {% endfor %}
+                      <p>{{assignment.user.moniker}}→{{assignment.recipient.moniker}}</p>
+                    </div>
                   </div>
-                </a>
+                </div> -->
+              {% endfor %}
             </div>
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/Screen_Shot_2020-01-02_at_10.21.28_AM.png" data-caption="Caption 2">
-                    <!-- <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center;"> -->
-                      <img src="/media/2020/01/05/Screen_Shot_2020-01-02_at_10.21.28_AM.png" alt="">
-                      <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">
-                        <p>Default Lorem</p>
-                      </div>
-<!--                     </div>
- -->                </a>
-            </div>
+          {% endfor %}
         </div>
-
       </div>
     </section>
     
@@ -179,28 +186,3 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
   
   </body>
 </html>
-
-<script>
-
-var slider = document.getElementById("excitement_slider");
-var slider_output = document.getElementById("excitement_number");
-var slider_text = document.getElementById("excitement_text");
-slider_output.innerHTML = slider.value; // Display the default slider value
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  slider_output.innerHTML = this.value;
-  var x = parseInt(this.value);
-  if (x < 10) {
-    slider_text.innerHTML = "Complete Garbage."
-  }else if (x < 55 && x > 45) {
-    slider_text.innerHTML = "Meh."
-  }else if (x > 90) {
-    slider_text.innerHTML = "Dope."
-  }
-  else{
-    slider_text.innerHTML = "&nbsp;"
-  }
-} 
-
-
-</script>

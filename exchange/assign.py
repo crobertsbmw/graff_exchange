@@ -33,8 +33,13 @@ for a,b in zip(throwers, throwers[1:]+throwers[:1]):
 
 
 
-piecers = list(users.filter(write_style="piece").all().order_by("-level"))
+#match the 10's 9's and 8'
+piecers = list(users.filter(write_style="piece", level__lte=7, level__gte=4).all())
+for u in piecers:
+    print(u.level, u.moniker)
+
 for a,b in zip(piecers, piecers[1:]+piecers[:1]):
+    print(a, b)
     Assignment(
         exchange=exchange,
         user = a,
@@ -43,3 +48,23 @@ for a,b in zip(piecers, piecers[1:]+piecers[:1]):
         rematch = False,
         moniker = b.moniker
     ).save()
+
+
+#rosk -> Zere
+#Lang -> Suchr
+
+
+#Review the submissions.
+
+for assignment in Assignment.objects.all():
+    sketches = assignment.sketches.all()
+    if len(sketches) == 0:
+        print("Not Done", assignment.user.moniker, "->", assignment.recipient.moniker)
+        continue
+    print(assignment.user.moniker, "->", assignment.recipient.moniker)
+    for sketch in sketches:
+        print("    ", "https://graffexchange.com"+sketch.image.url)
+
+
+
+

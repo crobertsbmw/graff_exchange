@@ -40,6 +40,7 @@ class Sketch(models.Model):
     user = models.ForeignKey('User', related_name="portfolio", on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=datetime.datetime.now)
     time_spent = models.CharField(max_length=255, blank=True, null=True)
+    exchange = models.ForeignKey('Exchange', related_name="sketches", related_query_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
 
 class Assignment(models.Model):
     def __str__(self):
@@ -51,8 +52,13 @@ class Assignment(models.Model):
     rematch = models.BooleanField(default=False)
     moniker = models.CharField(max_length=255)
     password = models.CharField(max_length=10, default=rand_string)
+    review_password = models.CharField(max_length=10, default=rand_string)
+    completed = models.BooleanField(default=False)
+    
     def upload_link(self):
         return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.password+"/"
+    def review_link(self):
+        return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+str(self.pk)+"/"+self.moniker.lower()+"/"+self.review_password+"/"
 
 def month_year_string():
     return datetime.datetime.now().strftime("%b %Y")
