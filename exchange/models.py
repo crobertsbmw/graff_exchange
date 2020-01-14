@@ -1,7 +1,8 @@
 import datetime, random, string
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from PIL import Image
+from django.conf import settings
 
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8))
@@ -34,13 +35,42 @@ class User(AbstractUser):
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
 
+
+def upload_to(instance, filename):
+    return '%s/%s' % (instance.user.moniker, filename)
+
 class Sketch(models.Model):
-    image = models.FileField(upload_to='%Y/%m/%d/')
+    image = models.FileField(upload_to=upload_to)
     assignment = models.ForeignKey('Assignment', related_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('User', related_name="portfolio", on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=datetime.datetime.now)
     time_spent = models.CharField(max_length=255, blank=True, null=True)
     exchange = models.ForeignKey('Exchange', related_name="sketches", related_query_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
+    def rotate(self):
+        im = Image.open(self.image.file)
+        angle = 90
+        im = im.rotate(angle, expand=True)
+        im.save(self.image.file.name)
+
+    def scale(self):
+        basewidth = 850
+        im = Image.open(self.image.file)
+        wpercent = (basewidth / float(im.size[0]))
+        hsize = int((float(im.size[1]) * float(wpercent)))
+        im = im.resize((basewidth, hsize), Image.ANTIALIAS)
+        im.save(self.image.file.name)
+
+    def scale_copy(self):
+        basewidth = 850
+        im = Image.open(self.image.file)
+        wpercent = (basewidth / float(im.size[0]))
+        hsize = int((float(im.size[1]) * float(wpercent)))
+        im = im.resize((basewidth, hsize), Image.ANTIALIAS)
+        fp = settings.MEDIA_ROOT+"/"+upload_to(self, rand_string())+".jpg"
+        im.save(fp)
+        self.image.file = fp
+        self.save()
+
 
 class Assignment(models.Model):
     def __str__(self):
