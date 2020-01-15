@@ -73,7 +73,10 @@ class Sketch(models.Model):
 
 class Assignment(models.Model):
     def __str__(self):
-        return self.user.moniker+" -> "+self.moniker+" ("+self.style+")"
+        if self.style:
+            return self.user.moniker+" -> "+self.moniker+" ("+self.style+")"
+        else:
+            return self.user.moniker+" -> "+self.moniker
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     recipient = models.ForeignKey('User', related_name="favors", on_delete=models.CASCADE)
