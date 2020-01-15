@@ -156,7 +156,9 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                       {% endif %}
                     </div>
                     <div class="uk-card-body">
-                        <p>{{assignment.pk}} {{assignment.user.moniker}}→{{assignment.recipient.moniker}}</p>
+                      <p {% if assignment.user.do_double %}style="color:#ff6c00;"{% endif %}>
+                        {{assignment.pk}} {{assignment.user.moniker}}→{{assignment.recipient.moniker}}
+                      </p>
                     </div>
                 </div>
                 <!-- <div>
