@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from PIL import Image
 from django.conf import settings
+import os
 
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8))
@@ -59,16 +60,10 @@ class Sketch(models.Model):
         wpercent = (basewidth / float(im.size[0]))
         hsize = int((float(im.size[1]) * float(wpercent)))
         im = im.resize((basewidth, hsize), Image.ANTIALIAS)
-        im.save(self.image.file.name)
-
-    def scale_copy(self):
-        basewidth = 850
-        im = Image.open(self.image.file)
-        wpercent = (basewidth / float(im.size[0]))
-        hsize = int((float(im.size[1]) * float(wpercent)))
-        im = im.resize((basewidth, hsize), Image.ANTIALIAS)
+        im = im.convert('RGB')
         fp = settings.MEDIA_ROOT+"/"+upload_to(self, rand_string())+".jpg"
-        im.save(fp)
+        basefilename, file_extension = os.path.split(self.image.file.name)
+        im.save(basefilename+"/"+rand_string()+"_scaled.jpg")
         self.image.file = fp
         self.save()
 
