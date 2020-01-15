@@ -1,3 +1,4 @@
+from PIL import Image
 from django.http import Http404
 import json, random, string
 from django.http import HttpResponse, JsonResponse
@@ -31,6 +32,7 @@ def upload_sketch(request, assignment_pk, tag, password):
         "sketches": assignment.sketches.all(),
         "tag": assignment.moniker,
     })
+
 
 def rematch_guide(request, exchange=None):
     if exchange:

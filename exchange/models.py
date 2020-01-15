@@ -54,6 +54,8 @@ class Sketch(models.Model):
         im = im.rotate(angle, expand=True)
         im.save(self.image.file.name)
 
+    # https://stackoverflow.com/questions/23945494/use-html5-to-resize-an-image-before-upload
+    # https://stackoverflow.com/questions/623698/resize-image-on-save
     def scale(self):
         basewidth = 850
         im = Image.open(self.image.file)
@@ -61,9 +63,8 @@ class Sketch(models.Model):
         hsize = int((float(im.size[1]) * float(wpercent)))
         im = im.resize((basewidth, hsize), Image.ANTIALIAS)
         im = im.convert('RGB')
-        fp = settings.MEDIA_ROOT+"/"+upload_to(self, rand_string())+".jpg"
-        basefilename, file_extension = os.path.split(self.image.file.name)
-        im.save(basefilename+"/"+rand_string()+"_scaled.jpg")
+        fp = basefilename+"/"+rand_string()+"_scaled.jpg"
+        im.save(fp)
         self.image.file = fp
         self.save()
 
