@@ -68,3 +68,9 @@ for assignment in Assignment.objects.all():
 
 
 
+#REMATCH emails
+exchange = Exchange.objects.all()[0]
+assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
+for assignment in assignments:
+    print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
+

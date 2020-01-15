@@ -35,7 +35,7 @@ class User(AbstractUser):
     ip = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
-
+    first_name = models.CharField(max_length=255, null=True, blank=True)
 
 def upload_to(instance, filename):
     return '%s/%s' % (instance.user.moniker, filename)
