@@ -49,9 +49,7 @@ def rematch_guide(request, exchange=None):
             assignment.save()
 
     #get the exchange circles.
-    assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
     assignment_groups = []
-    next_assignment = None
     loop_count = 0 
     while len(assignments) > 0 and loop_count < 1000:
         print("*******")
@@ -60,9 +58,12 @@ def rematch_guide(request, exchange=None):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            prev_assignment = Assignment.objects.get(recipient=assignment.user, rematch=False)
-            sorted_assignments.append(next_assignment)
-            assignment = next_assignment
+            next_assignments = Assignment.objects.filter(recipient=assignment.user)
+            for na in next_assignments:
+                sorted_assignments.append(na)
+                if not na.rematch:
+                    assignment = na
+        sorted_assignments.reverse()
         assignment_groups.append(sorted_assignments)
         loop_count += 1
 
