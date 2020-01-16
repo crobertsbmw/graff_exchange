@@ -47,6 +47,7 @@ class Sketch(models.Model):
     datetime = models.DateTimeField(default=datetime.datetime.now)
     time_spent = models.CharField(max_length=255, blank=True, null=True)
     exchange = models.ForeignKey('Exchange', related_name="sketches", related_query_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
+    
     def __str__(self):
         return str(self.user)+"->"+str(self.assignment.recipient)
 

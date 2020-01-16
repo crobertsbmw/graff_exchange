@@ -49,6 +49,7 @@ def rematch_guide(request, exchange=None):
             assignment.save()
 
     #get the exchange circles.
+    assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
     assignment_groups = []
     next_assignment = None
     loop_count = 0 
@@ -59,7 +60,7 @@ def rematch_guide(request, exchange=None):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignment = Assignment.objects.get(user=assignment.recipient)
+            prev_assignment = Assignment.objects.get(recipient=assignment.user)
             sorted_assignments.append(next_assignment)
             assignment = next_assignment
         assignment_groups.append(sorted_assignments)
@@ -69,6 +70,42 @@ def rematch_guide(request, exchange=None):
         "assignment_groups": assignment_groups,
         "exchange": exchange,
     })
+
+# def rematch_guide_old(request, exchange=None):
+#     if exchange:
+#         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
+#     else:
+#         exchange = Exchange.objects.all().order_by("-pk")[0]
+#     assignments = list(Assignment.objects.filter(exchange=exchange))
+#     if request.method == 'POST':
+#         pass
+    
+#     for assignment in assignments:
+#         if assignment.sketches.all().count() > 0:
+#             assignment.completed = True
+#             assignment.save()
+
+#     #get the exchange circles.
+#     assignment_groups = []
+#     next_assignment = None
+#     loop_count = 0 
+#     while len(assignments) > 0 and loop_count < 1000:
+#         print("*******")
+#         assignment = assignments[0]
+#         sorted_assignments = []
+#         while assignment in assignments:
+#             print(assignment)
+#             assignments.remove(assignment)
+#             next_assignment = Assignment.objects.get(user=assignment.recipient)
+#             sorted_assignments.append(next_assignment)
+#             assignment = next_assignment
+#         assignment_groups.append(sorted_assignments)
+#         loop_count += 1
+
+#     return render(request, 'rematch_guide.html', {
+#         "assignment_groups": assignment_groups,
+#         "exchange": exchange,
+#     })
 
 def review(request, exchange=None):
     if exchange:
