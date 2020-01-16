@@ -60,7 +60,7 @@ def rematch_guide(request, exchange=None):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            prev_assignment = Assignment.objects.get(recipient=assignment.user)
+            prev_assignment = Assignment.objects.get(recipient=assignment.user, rematch=False)
             sorted_assignments.append(next_assignment)
             assignment = next_assignment
         assignment_groups.append(sorted_assignments)
