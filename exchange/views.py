@@ -48,6 +48,8 @@ def rematch_guide(request, exchange=None):
             assignment.completed = True
             assignment.save()
 
+    
+    assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
     #get the exchange circles.
     assignment_groups = []
     loop_count = 0 
