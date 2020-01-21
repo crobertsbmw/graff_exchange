@@ -59,14 +59,15 @@ class Sketch(models.Model):
 
     # https://stackoverflow.com/questions/23945494/use-html5-to-resize-an-image-before-upload
     # https://stackoverflow.com/questions/623698/resize-image-on-save
-    def scale(self):
+    def resize(self):
         basewidth = 850
         im = Image.open(self.image.file)
         wpercent = (basewidth / float(im.size[0]))
         hsize = int((float(im.size[1]) * float(wpercent)))
         im = im.resize((basewidth, hsize), Image.ANTIALIAS)
         im = im.convert('RGB')
-        im.save(self.image.file.name)
+        name = os.path.splitext(sketch.image.file.name)[0]+".jpg"
+        im.save(name)
 
 
 class Assignment(models.Model):
@@ -90,7 +91,7 @@ class Assignment(models.Model):
     def upload_link(self):
         return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.password+"/"
     def review_link(self):
-        return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+str(self.pk)+"/"+self.moniker.lower()+"/"+self.review_password+"/"
+        return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.review_password+"/"
 
 def month_year_string():
     return datetime.datetime.now().strftime("%b %Y")
