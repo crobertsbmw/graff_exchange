@@ -136,36 +136,51 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
     <section id="content" class="uk-section uk-section-default">
       <div class="uk-container">
         <h1>{{exchange.name}} Exchange</h1>
-        <!--Slider -->
-        <!--Overlay -->
-        <div class="uk-child-width-1-2@s uk-child-width-1-3@l" uk-grid="masonry: true" uk-grid uk-lightbox="animation: slide">
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/avatar_xor.png" data-caption="Caption 1">
-                  <img src="/media/2020/01/05/avatar_xor.png" alt="">
-                  <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">
-                <p class="uk-h4 uk-margin-remove">Bottom</p>
-            </div>
-                </a>
-            </div>
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/avatar.png" data-caption="Caption 2">
-                  <img src="/media/2020/01/05/avatar.png" alt="">
-      <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">                    <p>Default Lorem</p>
-                  </div>
-                </a>
-            </div>
-            <div>
-                <a class="uk-inline-clip uk-transition-toggle" href="/media/2020/01/05/Screen_Shot_2020-01-02_at_10.21.28_AM.png" data-caption="Caption 2">
-                    <!-- <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center;"> -->
-                      <img src="/media/2020/01/05/Screen_Shot_2020-01-02_at_10.21.28_AM.png" alt="">
-                      <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-primary">
-                        <p>Default Lorem</p>
-                      </div>
-<!--                     </div>
- -->                </a>
-            </div>
-        </div>
+        <p>Thanks to everyone who followed through on this. And special thanks to those that did multiple sketches. Below are the results, and this is going to be even better next month. So please <a href="https://graffexchange.com/">sign up for the February exchange.</a></p>
+        
+        <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
+        {% for assignment in assignments %}
+          <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h3>
+          {% if assignment_sketches|length == 1 %}
 
+            <div uk-grid>
+              <div class="uk-width-auto">
+                <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:800px;">
+                  <img src="{{assignment.sketches.0.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" style="max-height:450px;">
+                </div>
+              </div>
+            </div>
+
+          {% else %}
+
+            <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:650px;">
+              <div uk-slideshow="animation: slide; autoplay: true; autoplay-interval: 4500; pause-on-hover: true;">
+                <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+                  <ul class="uk-slideshow-items">
+                    {% for sketch in assignment.sketches.all %}
+                    <li>
+                      <img src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" uk-cover>
+                    </li>
+                    {% endfor %}
+                  </ul>
+
+                  <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                  <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                </div>
+                <div class="uk-position-bottom-center uk-position-small">
+                  <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                </div>
+              </div>
+            </div>
+
+          {% endif %}
+
+        {% endfor %}
+        <div class="uk-container">
+          <div class="uk-text-center uk-padding">
+          <a href="https://graffexchange.com/#signup" uk-scroll class="uk-button uk-button-secondary uk-border-pill">Sign Up for the February Exchange</a>
+        </div>
+      </div>
       </div>
     </section>
     

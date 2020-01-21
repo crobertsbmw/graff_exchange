@@ -115,11 +115,9 @@ def review(request, exchange=None):
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
         exchange = Exchange.objects.all().order_by("-pk")[0]
-    assignments = Assignment.objects.filter(exchange=exchange)
+    assignments = Assignment.objects.filter(exchange=exchange, completed=True)
     if request.method == 'POST':
         pass
-
-    assignments = Assignment.objects.filter(completed=True)
     return render(request, 'review.html', {
         "assignments": assignments,
         "exchange": exchange,
@@ -145,17 +143,21 @@ def review_sketches(request, exchange, assignment_pk, tag, password):
 def signup(request):
     if request.method == 'POST':
         email = request.POST["email"].lower().strip()
+        exchange = Exchange.objects.get(name="Feb 2020")
         try:
-            user = User.objects.get(email=email)
+            user = exchange.users.objects.get(email=email)
             return render(request, 'already_signed_up.html', {
 
             })
         except:
             pass
-        user = User(email=email, username=rand_string())
+        user, created = User.objects.get_or_create(email=email)
+        if created:
+            user.username=rand_string()
+            user.password = "abc123"
         user.moniker = request.POST["moniker"].strip()
         user.write_style = request.POST.get("write_style", None)
-        user.recieve_style = request.POST.get("recieve_style", None)
+        user.recieve_style = request.POST.get("write_style", None)
         user.do_double = request.POST.get("do_double", "") == "true"
         user.comments = request.POST.get("comments", None)
         user.ip = request.META.get('REMOTE_ADDR', None)
@@ -167,7 +169,6 @@ def signup(request):
             except:
                 pass
         user.save()
-        exchange = Exchange.objects.all()[0]
         exchange.users.add(user)
         exchange.save()
 
@@ -179,4 +180,4 @@ def signup(request):
 
 def december(request):
     return render(request, 'december.html', {
-    })
+})

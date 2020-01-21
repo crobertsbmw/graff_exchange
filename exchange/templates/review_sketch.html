@@ -140,16 +140,14 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
           <h2>{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h2>
           <div data-uk-scrollspy-class="uk-animation-slide-right-medium">
             {% if assignment_sketches|length == 1 %}
-              {% for sketch in assignment_sketches %}
-                <div style="display:flex; align-items: center; justify-content:center;">
-                  <div class="uk-card uk-card-default" style="padding:10px;">
-                    <img src="{{sketch.image.url}}">
-                  </div>
+              <div style="display:flex; align-items: center; justify-content:center;">
+                <div class="uk-card uk-card-default" style="padding:10px;">
+                  <img src="{{assignment_sketches.0.image.url}}">
                 </div>
-              {% endfor %}
+              </div>
             {% else %}
 
-              <div class="uk-child-width-1-2@m uk-grid-medium uk-grid-match"uk-grid="masonry: true">
+              <div class="uk-child-width-1-2@m uk-grid-medium uk-grid-match" uk-grid="masonry: true">
                 {% for sketch in assignment_sketches %}
                   <div>
                     <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center; justify-content:center;">
