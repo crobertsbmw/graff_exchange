@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from exchange.models import User, Sketch, Assignment, Exchange
 from django.contrib.gis.geoip2 import GeoIP2
+import itertools
 # Create your views here.
 
 #filter
@@ -110,12 +111,40 @@ def rematch_guide(request, exchange=None):
 #         "exchange": exchange,
 #     })
 
+
+def sortedAssignments(exchange):
+    assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
+    #get the exchange circles.
+    assignment_groups = []
+    loop_count = 0 
+    while len(assignments) > 0 and loop_count < 1000:
+        print("*******")
+        assignment = assignments[0]
+        sorted_assignments = []
+        while assignment in assignments:
+            print(assignment)
+            assignments.remove(assignment)
+            next_assignments = Assignment.objects.filter(recipient=assignment.user)
+            for na in next_assignments:
+                if na.completed:
+                    sorted_assignments.append(na)
+                if not na.rematch:
+                    assignment = na
+        sorted_assignments.reverse()
+        assignment_groups.append(sorted_assignments)
+        loop_count += 1
+
+    chain = itertools.chain(*assignment_groups)
+    return list(chain)
+    
+
+
 def review(request, exchange=None):
     if exchange:
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
         exchange = Exchange.objects.all().order_by("-pk")[0]
-    assignments = Assignment.objects.filter(exchange=exchange, completed=True)
+    assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
     return render(request, 'review.html', {
