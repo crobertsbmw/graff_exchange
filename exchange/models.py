@@ -60,15 +60,19 @@ class Sketch(models.Model):
     # https://stackoverflow.com/questions/23945494/use-html5-to-resize-an-image-before-upload
     # https://stackoverflow.com/questions/623698/resize-image-on-save
     def resize(self):
-        basewidth = 850
+        basewidth = 800
         im = Image.open(self.image.file)
+        if im.size[0] < basewidth: basewidth = 800
         wpercent = (basewidth / float(im.size[0]))
         hsize = int((float(im.size[1]) * float(wpercent)))
         im = im.resize((basewidth, hsize), Image.ANTIALIAS)
         im = im.convert('RGB')
-        name = os.path.splitext(sketch.image.file.name)[0]+".jpg"
+        name = os.path.splitext(self.image.file.name)[0]+"_resize.jpg"
         im.save(name)
-
+        name = name.replace(settings.MEDIA_ROOT, "")
+        if name[0] == "/": name = name[1:]
+        self.image = name
+        self.save()
 
 class Assignment(models.Model):
     def __str__(self):
