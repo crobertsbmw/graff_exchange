@@ -173,10 +173,13 @@ def review_sketches(request, exchange_name, assignment_pk, tag, password):
         assignment.recipient.comments = request.POST.get("feedback", None)
         assignment.recipient.save()
         print("Updated")
+        return redirect("/review/"+exchange_name+"/?thank_you=1")
 
     assignment_sketches = assignment.sketches.all()
-    
-    return redirect("/review/"+exchange_name+"/?thank_you=1")
+    return render(request, 'review_sketch.html', {
+        "assignment_sketches": assignment_sketches,
+        "assignment": assignment,
+    })
 
 
 def signup(request):

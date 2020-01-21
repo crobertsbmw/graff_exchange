@@ -66,10 +66,7 @@ class Sketch(models.Model):
         hsize = int((float(im.size[1]) * float(wpercent)))
         im = im.resize((basewidth, hsize), Image.ANTIALIAS)
         im = im.convert('RGB')
-        fp = basefilename+"/"+rand_string()+"_scaled.jpg"
-        im.save(fp)
-        self.image.file = fp
-        self.save()
+        im.save(self.image.file.name)
 
 
 class Assignment(models.Model):
