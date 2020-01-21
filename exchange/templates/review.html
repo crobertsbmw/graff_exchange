@@ -135,6 +135,11 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
     <!-- /TOP -->
     <section id="content" class="uk-section uk-section-default">
       <div class="uk-container">
+        {% if thank_you %}
+        <h2>Thank you for your feedback.</h2>
+        <p>I use it to try and match people more evenly for future exchanges.</p>
+        <hr>
+        {% endif %}
         <h1>{{exchange.name}} Exchange</h1>
         <p>Thanks to everyone who followed through on this. And special thanks to those that did multiple sketches. Below are the results, and this is going to be even better next month. So please <a href="https://graffexchange.com/">sign up for the February exchange.</a></p>
         

@@ -80,10 +80,6 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
   text-transform: none;
 }
 
-.uk-input {
-  color: #fff !important;
-  background: rgba(0,0,0,0) !important;
-}
 
 #drop_zone {
   border: 2px dashed #c9cbd5;
@@ -161,24 +157,27 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
           <div class="uk-grid uk-child-width-1-2@m uk-flex-middle">
             <div>
               <h3 class="uk-margin-medium-top">Quick Questions</h3>
-              <form action="/" method="post" id="login-form">
+              <form action="" method="post">
                 {% csrf_token %}
                 <div class="uk-margin">
                   <div>On a scale of 1 to 100, how excited about this sketch are you?</div>
                   <div uk-grid>
-                      <div class="uk-width-expand@s"><input id="excitement_slider" class="uk-range" type="range" value="47" min="0" max="100" step="1"></div>
+                      <div class="uk-width-expand@s"><input id="excitement_slider" class="uk-range" type="range" name="excitement" value="47" min="0" max="100" step="1"></div>
                       <div class="uk-width-auto@s"><span id="excitement_number"></span></div>
                   </div>
                   <div id="excitement_text">&nbsp;</div>
                   <div class="uk-margin uk-margin-medium-top">
-                  <div>Are you going to post the sketch <b>you</b> did on reddit?</div>
-                  <div class="uk-grid-small uk-child-width-auto uk-grid">
-                    <label><input class="uk-radio" type="radio" name="reddit" value="myself"> I want to post it myself.</label>
-                    <label><input class="uk-radio" type="radio" name="reddit" value="yes"> You can post it for me.</label>
-                    <label><input class="uk-radio" type="radio" name="reddit" value="no"> I would rather it not be posted to reddit.</label>
+                    <div>Are you going to post the sketch <b>you</b> did on reddit?</div>
+                    <div class="uk-grid-small uk-child-width-auto uk-grid">
+                      <label><input class="uk-radio" type="radio" name="reddit" value="myself"> I want to post it myself.</label>
+                      <label><input class="uk-radio" type="radio" name="reddit" value="yes"> You can post it for me.</label>
+                      <label><input class="uk-radio" type="radio" name="reddit" value="no"> I would rather it not be posted to reddit.</label>
+                    </div>
                   </div>
-                </div>
-
+                  <div class="uk-margin uk-margin-medium-top">
+                  <div>Do you have any feedback or ideas on how we can improve&nbsp;the&nbsp;exchange?</div>
+                    <input class="uk-input" type="text" name="feedback">
+                  </div>
                 <button href="#" class="uk-button uk-button-primary uk-border-pill uk-margin-medium-top" data-uk-icon="arrow-right" type="submit">Submit</button>
                 </div>
               </form>

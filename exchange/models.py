@@ -87,7 +87,9 @@ class Assignment(models.Model):
     password = models.CharField(max_length=10, default=rand_string)
     review_password = models.CharField(max_length=10, default=rand_string)
     completed = models.BooleanField(default=False)
-    
+    can_post_to_reddit = models.CharField(max_length=255, null=True, blank=True)
+    excitement = models.IntegerField(null=True, blank=True)
+
     def upload_link(self):
         return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.password+"/"
     def review_link(self):

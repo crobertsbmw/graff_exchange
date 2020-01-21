@@ -147,13 +147,15 @@ def review(request, exchange=None):
     assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
+    thank_you = request.GET.get("thank_you", False)
     return render(request, 'review.html', {
         "assignments": assignments,
         "exchange": exchange,
+        "thank_you": thank_you
     })
 
-def review_sketches(request, exchange, assignment_pk, tag, password):
-    exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))    
+def review_sketches(request, exchange_name, assignment_pk, tag, password):
+    exchange = get_object_or_404(Exchange, name__iexact=exchange_name.replace("_", " "))    
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     if exchange != assignment.exchange:
         raise Http404("Sketch doesn't exist")
@@ -161,12 +163,20 @@ def review_sketches(request, exchange, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.review_password != password:
         raise Http404("Incorrect Password")
+
+    if request.method == 'POST':
+        assignment.excitement = request.POST.get("excitement", None)
+        assignment.save()
+        for a in Assignment.objects.filter(user=assignment.recipient, exchange=exchange):
+            a.can_post_to_reddit = request.POST.get("reddit", None)
+            a.save()
+        assignment.recipient.comments = request.POST.get("feedback", None)
+        assignment.recipient.save()
+        print("Updated")
+
     assignment_sketches = assignment.sketches.all()
     
-    return render(request, 'review_sketch.html', {
-        "assignment_sketches": assignment_sketches,
-        "assignment": assignment,
-    })
+    return redirect("/review/"+exchange_name+"/?thank_you=1")
 
 
 def signup(request):
