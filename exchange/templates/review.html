@@ -146,12 +146,12 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
         <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
         {% for assignment in assignments %}
           <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h3>
-          {% if assignment_sketches|length == 1 %}
-
+          {% if assignment.sketches.all|length == 1 %}
+          
             <div uk-grid>
               <div class="uk-width-auto">
-                <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:800px;">
-                  <img src="{{assignment.sketches.0.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" style="max-height:450px;">
+                <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:750px;">
+                  <img src="{{assignment.sketches.all.0.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" style="max-height:400px;">
                 </div>
               </div>
             </div>
