@@ -1,10 +1,8 @@
 from exchange.models import *
 
 #get the exchange we want to make assignments for
-
-exchange = Exchange.objects.all()[0]
+exchange = Exchange.objects.get(name="Feb 2020")
 #sort by style
-
 users = exchange.users.all() # get our users
 
 handstylers = list(users.filter(write_style="handstyle").all().order_by("-level"))

@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from exchange.models import User, Sketch, Assignment, Exchange
 from django.contrib.gis.geoip2 import GeoIP2
 import itertools
+from django.contrib.auth import authenticate, login, logout
+
 # Create your views here.
 
 #filter
@@ -23,7 +25,7 @@ def upload_sketch(request, assignment_pk, tag, password):
     if assignment.password != password:
         raise Http404("Incorrect Password")
 
-    auth_user(request, user)
+    auth_user(request, assignment.user)
     if request.method == 'POST':
         time = request.POST.get("time")
         files = request.FILES.getlist('sketches')
@@ -132,7 +134,7 @@ def review_sketches(request, exchange_name, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.review_password != password:
         raise Http404("Incorrect Password")
-    auth_user(request, user)
+    auth_user(request, assignment.user)
     if request.method == 'POST':
         assignment.excitement = request.POST.get("excitement", None)
         assignment.save()
