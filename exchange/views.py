@@ -22,6 +22,8 @@ def upload_sketch(request, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
+
+    auth_user(request, user)
     if request.method == 'POST':
         time = request.POST.get("time")
         files = request.FILES.getlist('sketches')
@@ -34,6 +36,10 @@ def upload_sketch(request, assignment_pk, tag, password):
         "tag": assignment.moniker,
     })
 
+
+def auth_user(request, user):
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
 
 def rematch_guide(request, exchange=None):
     if exchange:
@@ -74,43 +80,6 @@ def rematch_guide(request, exchange=None):
         "assignment_groups": assignment_groups,
         "exchange": exchange,
     })
-
-# def rematch_guide_old(request, exchange=None):
-#     if exchange:
-#         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
-#     else:
-#         exchange = Exchange.objects.all().order_by("-pk")[0]
-#     assignments = list(Assignment.objects.filter(exchange=exchange))
-#     if request.method == 'POST':
-#         pass
-    
-#     for assignment in assignments:
-#         if assignment.sketches.all().count() > 0:
-#             assignment.completed = True
-#             assignment.save()
-
-#     #get the exchange circles.
-#     assignment_groups = []
-#     next_assignment = None
-#     loop_count = 0 
-#     while len(assignments) > 0 and loop_count < 1000:
-#         print("*******")
-#         assignment = assignments[0]
-#         sorted_assignments = []
-#         while assignment in assignments:
-#             print(assignment)
-#             assignments.remove(assignment)
-#             next_assignment = Assignment.objects.get(user=assignment.recipient)
-#             sorted_assignments.append(next_assignment)
-#             assignment = next_assignment
-#         assignment_groups.append(sorted_assignments)
-#         loop_count += 1
-
-#     return render(request, 'rematch_guide.html', {
-#         "assignment_groups": assignment_groups,
-#         "exchange": exchange,
-#     })
-
 
 def sortedAssignments(exchange):
     assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
@@ -163,7 +132,7 @@ def review_sketches(request, exchange_name, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.review_password != password:
         raise Http404("Incorrect Password")
-
+    auth_user(request, user)
     if request.method == 'POST':
         assignment.excitement = request.POST.get("excitement", None)
         assignment.save()
@@ -211,6 +180,8 @@ def signup(request):
             except:
                 pass
         user.save()
+        if created:
+            auth_user(request, user)
         exchange.users.add(user)
         exchange.save()
 
@@ -218,7 +189,7 @@ def signup(request):
             "email": email
         })
     return render(request, 'signup.html', {
-})
+    })
 
 def december(request):
     return render(request, 'december.html', {

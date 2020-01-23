@@ -37,11 +37,18 @@ class User(AbstractUser):
     city = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
 
+class Signup(models.Model):
+    user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
+    moniker = models.CharField(max_length=255)
+    style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
+    comments = models.CharField(max_length=1200, null=True, blank=True)
+    do_double = models.BooleanField(default=False)
+
 def upload_to(instance, filename):
-    return '%s/%s' % (instance.user.moniker, filename)
+    return '%s/%s' % (instance.user.username, filename)
 
 class Sketch(models.Model):
-    image = models.FileField(upload_to=upload_to)
+    image = models.ImageField(upload_to=upload_to)
     assignment = models.ForeignKey('Assignment', related_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('User', related_name="portfolio", on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=datetime.datetime.now)
@@ -82,7 +89,9 @@ class Assignment(models.Model):
             return self.user.moniker+" -> "+self.moniker
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
+    user_signup = models.ForeignKey('Signup', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE, null=True, blank=True)
     recipient = models.ForeignKey('User', related_name="favors", on_delete=models.CASCADE)
+    recipient_signup = models.ForeignKey('Signup', related_name="favors", related_query_name="favor", on_delete=models.CASCADE, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
     rematch = models.BooleanField(default=False)
     moniker = models.CharField(max_length=255)
@@ -91,6 +100,7 @@ class Assignment(models.Model):
     completed = models.BooleanField(default=False)
     can_post_to_reddit = models.CharField(max_length=255, null=True, blank=True)
     excitement = models.IntegerField(null=True, blank=True)
+    posted_to_reddit = models.BooleanField(default=False)
 
     def upload_link(self):
         return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.moniker.lower()+"/"+self.password+"/"

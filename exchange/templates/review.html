@@ -146,7 +146,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
         <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
         {% for assignment in assignments %}
           <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h3>
-          {% if assignment.sketches.all|length == 1 %}
+          {% if assignment.sketches.all|length == 0 %}
           
             <div uk-grid>
               <div class="uk-width-auto">
@@ -159,12 +159,14 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
           {% else %}
 
             <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:650px;">
-              <div uk-slideshow="animation: slide; autoplay: true; autoplay-interval: 4500; pause-on-hover: true;">
+              <div uk-slideshow="animation: slide; autoplay: true; autoplay-interval: 4500; pause-on-hover: true;ratio:{{assignment.sketches.all.0.image.width}}:{{assignment.sketches.all.0.image.height}}">
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
                   <ul class="uk-slideshow-items">
                     {% for sketch in assignment.sketches.all %}
                     <li>
-                      <img src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" uk-cover>
+                      <div>
+                        <img src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" uk-cover>
+                      </div>
                     </li>
                     {% endfor %}
                   </ul>
@@ -177,7 +179,6 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                 </div>
               </div>
             </div>
-
           {% endif %}
 
         {% endfor %}

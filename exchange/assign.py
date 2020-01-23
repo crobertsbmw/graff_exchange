@@ -50,22 +50,6 @@ for a,b in zip(piecers, piecers[1:]+piecers[:1]):
     ).save()
 
 
-#rosk -> Zere
-#Lang -> Suchr
-
-
-#Review the submissions.
-
-for assignment in Assignment.objects.all():
-    sketches = assignment.sketches.all()
-    if len(sketches) == 0:
-        print("Not Done", assignment.user.moniker, "->", assignment.recipient.moniker)
-        continue
-    print(assignment.user.moniker, "->", assignment.recipient.moniker)
-    for sketch in sketches:
-        print("    ", "https://graffexchange.com"+sketch.image.url)
-
-
 
 
 #REMATCH emails
@@ -74,3 +58,11 @@ assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
 for assignment in assignments:
     print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
 
+
+#CAN WE POST TO REDDIT?
+assignments = Assignment.objects.filter(can_post_to_reddit__isnull=False, posted_to_reddit=False)
+for assignment in assignments:
+    print("****")
+    print(assignment.can_post_to_reddit)
+    print(assignment.user.moniker, "->", assignment.moniker)
+    print(assignment.completed)
