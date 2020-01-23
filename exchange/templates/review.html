@@ -147,15 +147,21 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
         {% for assignment in assignments %}
           <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h3>
           {% if assignment.sketches.all|length == 1 %}
-          
+          {% with sketch=assignment.sketches.all.0 %}
             <div uk-grid>
               <div class="uk-width-auto">
                 <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:750px;">
-                  <img src="{{assignment.sketches.all.0.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" style="max-height:400px;">
+                  <img data-src="{{sketch.image.url}}" 
+                        width="{{sketch.image.width}}" 
+                        height="{{sketch.image.height}}"
+                        alt="Graffiti Sketch of {{assignment.moniker}}" 
+                        style="max-height:400px;"
+                        uk-img="target: !.uk-card -*, !.uk-card +*"
+                        >
                 </div>
               </div>
             </div>
-
+          {% endwith %}
           {% else %}
 
             <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:650px;">
@@ -165,7 +171,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                     {% for sketch in assignment.sketches.all %}
                     <li>
                       <div>
-                        <img src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" uk-cover style="max-height:100%">
+                        <img data-src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" width="{{sketch.image.width}}" width="{{sketch.image.height}}" uk-cover uk-img="target: !.uk-slideshow-items" style="max-height:100%">
                       </div>
                     </li>
                     {% endfor %}
