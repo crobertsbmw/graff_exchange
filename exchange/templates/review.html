@@ -151,7 +151,8 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
             <div uk-grid>
               <div class="uk-width-auto">
                 <div class="uk-card uk-card-default uk-card-body uk-padding-small" style="max-width:750px;">
-                  <img data-src="{{sketch.image.url}}" 
+                  <img class="single_image"
+                        data-src="{{sketch.image.url}}" 
                         width="{{sketch.image.width}}" 
                         height="{{sketch.image.height}}"
                         alt="Graffiti Sketch of {{assignment.moniker}}" 
@@ -208,25 +209,20 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
 
 <script>
 
-var slider = document.getElementById("excitement_slider");
-var slider_output = document.getElementById("excitement_number");
-var slider_text = document.getElementById("excitement_text");
-slider_output.innerHTML = slider.value; // Display the default slider value
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  slider_output.innerHTML = this.value;
-  var x = parseInt(this.value);
-  if (x < 10) {
-    slider_text.innerHTML = "Complete Garbage."
-  }else if (x < 55 && x > 45) {
-    slider_text.innerHTML = "Meh."
-  }else if (x > 90) {
-    slider_text.innerHTML = "Dope."
+
+window.addEventListener('load', function () {
+  var images = document.getElementsByClassName("single_image");
+  for (let image of images) {
+    var w = image.offsetWidth
+    var h = image.offsetHeight
+    if (h > 400) {
+      image.style.width = "auto"
+      image.style.maxHeight = "400px";
+    }
   }
-  else{
-    slider_text.innerHTML = "&nbsp;"
-  }
-} 
+})
+
+
 
 
 </script>
