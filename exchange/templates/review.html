@@ -145,7 +145,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
         
         <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
         {% for assignment in assignments %}
-          <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h3>
+          <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.moniker}}</h3>
           {% if assignment.sketches.all|length == 1 %}
           {% with sketch=assignment.sketches.all.0 %}
             <div uk-grid>

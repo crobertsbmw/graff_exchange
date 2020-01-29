@@ -85,29 +85,8 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
   background: rgba(0,0,0,0) !important;
 }
 
-#drop_zone {
-  border: 2px dashed #c9cbd5;
-  width:  100%;
-  display: flex;
-  align-items: center; /* Vertical center alignment */
-  justify-content: center;
-  /*padding: 3em;*/
-}
-
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    background: #fff;
-}
-
-#submit_label {
-  cursor: auto;
-  opacity: 0.3;
-}
-
-#file_input, #submit_btn {
-    display: none;
+#success_notification {
+  display: none;
 }
 </style>
 </head>
@@ -145,7 +124,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
               {% endif %}
 
 
-              <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match"uk-grid="masonry: true">
+              <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match" uk-grid="masonry: true" id="sketch_container">
                 {% for sketch in sketches %}
                 <div>
                   <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center;">
@@ -157,42 +136,39 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
 
                 <h2 class="uk-margin-small-top">Upload Sketch for "{{tag}}"</h2>
                 <p>If you have any problems you can email your sketch to <a href="mailto:(chase@graffexchange.com)">chase@graffexchange.com</a>.</p>
-                <form action="" method="post" enctype="multipart/form-data">
-                <div class="uk-text-center">
-                    {% csrf_token %}
-                    <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);" class="uk-text-center">
-                      <div id="drag_here_container" style="padding:3em;">
-                          <p>Drag one or more files here</p>
-                          <p>or</p>
-                          <label for="file_input" class="custom-file-upload">
-                              Browse Files
-                          </label>
-                          <input id="file_input" type="file" name="sketches" multiple onchange="fileChanged(event);"> 
-                      </div>
-                      <div id="file_list"></div>
-                    </div>
+                
+                <div class="uk-margin-small-top">Approximately how long did you spend on this assignment?</div>
+                <div class="uk-grid uk-child-width-1-2@s uk-child-width-1-3@l uk-margin-medium-bottom">
+                  <div>
+                    <select class="uk-select" name="time" id="time_select">
+                        <option>Less than 30 min</option>
+                        <option>30 min</option>
+                        <option>1 hour</option>
+                        <option>1.5 hours</option>
+                        <option>2 hours</option>
+                        <option>3 hours</option>
+                        <option>4 hours</option>
+                        <option>More than 4 hours</option>
+                    </select>
                   </div>
+                </div>
 
-                  <div class="uk-margin-small-top">Approximately how long did you spend on this assignment?</div>
-                  <div class="uk-grid uk-child-width-1-2@s uk-child-width-1-3@l">
-                    <div>
-                      <select class="uk-select" name="time">
-                          <option>Less than 30 min</option>
-                          <option>30 min</option>
-                          <option>1 hour</option>
-                          <option>1.5 hours</option>
-                          <option>2 hours</option>
-                          <option>3 hours</option>
-                          <option>4 hours</option>
-                          <option>More than 4 hours</option>
-                      </select>
-                      <label id="submit_label" for="submit_btn" class="uk-margin-small-top custom-file-upload">
-                          Upload Selected Files
-                      </label disabled>
-                      <input id="submit_btn" type="submit" name="Submit" value="Upload" disabled>
+                <div class="uk-alert-success" uk-alert id="success_notification">
+                <a class="uk-alert-close" uk-close></a>
+                <p>Success! You're good to go.</p>
+                </div>
+
+                <div class="uk-text-center">
+                    <div class="js-upload uk-placeholder uk-text-center">
+                        <span uk-icon="icon: cloud-upload"></span>
+                        <span class="uk-text-middle">Drag one or more files here or </span>
+                        <div uk-form-custom>
+                            <input type="file" multiple>
+                            <span class="uk-link">select one.</span>
+                        </div>
                     </div>
+                    <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
                   </div>
-                </form>
               </div>
             </div>
       </div>
@@ -204,62 +180,117 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
       </div>
     </footer>
     <!-- /FOOTER -->
-  
   </body>
 </html>
-
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 <script>
 
-function fileChanged(ev) {
-    var files = document.getElementById("file_input").files;
-    if (files.length == 0) return;
+var bar = document.getElementById('js-progressbar');
 
-    console.log("Got files");
-    var sl = document.getElementById("submit_label")
-    sl.style.opacity = "1";
-    sl.style.cursor = "pointer";
-    document.getElementById("drop_zone").style.border = "2px solid #1b3099";
-    document.getElementById("drag_here_container").style.display = "none";
-    var file_list = document.getElementById("file_list");
-    file_list.innerHTML = "";
-    for (var i = 0; i < files.length; i++) {
-        var file = files.item(i);
-        var p = document.createElement("p");
-        p.textContent = file.name;
-        file_list.appendChild(p);
-    }
-    document.getElementById("submit_btn").disabled = false;
-}
-function dropHandler(ev) {
-  console.log('File(s) dropped');
+  UIkit.upload('.js-upload', {
+      url: '',
+      multiple: true,
+      mime: "image/*",
+      name: "sketches",
+      type: "json",
+      params: {
+        "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+        "time": document.getElementById("time_select").value
+      },
 
-  // Prevent default behavior (Prevent file from being opened)
-  ev.preventDefault();
+      loadStart: function (e) {
+          console.log('loadStart', arguments);
+          bar.removeAttribute('hidden');
+          bar.max = e.total;
+          bar.value = e.loaded;
+      },
 
-    // Use DataTransfer interface to access the file(s)
-    // for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-    //   console.log('2... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-    // }
-    document.getElementById("file_input").files = ev.dataTransfer.files;
-    fileChanged(ev);
-}
+      progress: function (e) {
+          console.log('progress', arguments);
 
-function dragLeaveHandler(ev) {
-  console.log('File(s) out of drop zone'); 
-  document.getElementById("drop_zone").style.border = "2px dashed #c9cbd5";
-}
+          bar.max = e.total;
+          bar.value = e.loaded;
+      },
 
-function dragOverHandler(ev) {
-  console.log('File(s) in drop zone'); 
-  document.getElementById("drop_zone").style.border = "2px dashed #4b69ff";
+      loadEnd: function (e) {
+          console.log('loadEnd', arguments);
 
-  // Prevent default behavior (Prevent file from being opened)
-  ev.preventDefault();
-}
+          bar.max = e.total;
+          bar.value = e.loaded;
+      },
 
-var zone = document.getElementById('drop_zone')
-var h = zone.offsetHeight;
-zone.style.height = h+"px";
+      completeAll: function (e) {
+          console.log('completeAll', e.response);
+          var urls = e.response.images;
+          
+          setTimeout(function () {
+              bar.setAttribute('hidden', 'hidden');
+          }, 1000);
+
+          var e = document.getElementById("sketch_container");
+          for (url of urls){
+            console.log(url);
+            var t = document.createElement("div");
+            t.innerHTML = '<div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center;">\
+                <img src="'+url+'"> \
+              </div>'
+            e.appendChild(t)
+          }
+          document.getElementById('success_notification').style.display = "block";
+      }
+  });
+
+
+// function fileChanged(ev) {
+//     var files = document.getElementById("file_input").files;
+//     if (files.length == 0) return;
+
+//     console.log("Got files");
+//     var sl = document.getElementById("submit_label")
+//     sl.style.opacity = "1";
+//     sl.style.cursor = "pointer";
+//     document.getElementById("drop_zone").style.border = "2px solid #1b3099";
+//     document.getElementById("drag_here_container").style.display = "none";
+//     var file_list = document.getElementById("file_list");
+//     file_list.innerHTML = "";
+//     for (var i = 0; i < files.length; i++) {
+//         var file = files.item(i);
+//         var p = document.createElement("p");
+//         p.textContent = file.name;
+//         file_list.appendChild(p);
+//     }
+//     document.getElementById("submit_btn").disabled = false;
+// }
+// function dropHandler(ev) {
+//   console.log('File(s) dropped');
+
+//   // Prevent default behavior (Prevent file from being opened)
+//   ev.preventDefault();
+
+//     // Use DataTransfer interface to access the file(s)
+//     // for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+//     //   console.log('2... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+//     // }
+//     document.getElementById("file_input").files = ev.dataTransfer.files;
+//     fileChanged(ev);
+// }
+
+// function dragLeaveHandler(ev) {
+//   console.log('File(s) out of drop zone'); 
+//   document.getElementById("drop_zone").style.border = "2px dashed #c9cbd5";
+// }
+
+// function dragOverHandler(ev) {
+//   console.log('File(s) in drop zone'); 
+//   document.getElementById("drop_zone").style.border = "2px dashed #4b69ff";
+
+//   // Prevent default behavior (Prevent file from being opened)
+//   ev.preventDefault();
+// }
+
+// var zone = document.getElementById('drop_zone')
+// var h = zone.offsetHeight;
+// zone.style.height = h+"px";
 
 
 

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from PIL import Image
 from django.conf import settings
 import os
+from stdimage import JPEGField
 
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8))
@@ -48,7 +49,11 @@ def upload_to(instance, filename):
     return '%s/%s' % (instance.user.username, filename)
 
 class Sketch(models.Model):
-    image = models.ImageField(upload_to=upload_to)
+    # image = models.ImageField(upload_to=upload_to)
+    image = JPEGField(
+        upload_to=upload_to,
+        variations={'large': (750, 450), 'thumbnail': (125, 75)},
+    )
     assignment = models.ForeignKey('Assignment', related_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('User', related_name="portfolio", on_delete=models.CASCADE)
     datetime = models.DateTimeField(default=datetime.datetime.now)

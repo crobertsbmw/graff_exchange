@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from exchange.models import User, Sketch, Assignment, Exchange
 from django.contrib.gis.geoip2 import GeoIP2
 import itertools
+from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -19,6 +20,7 @@ def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
 
 def upload_sketch(request, assignment_pk, tag, password):
+    print(request.POST)
     assignment = Assignment.objects.get(pk=assignment_pk)
     if assignment.moniker.lower() != tag.lower():
         raise Http404("Tag doesn't exist")
@@ -29,10 +31,18 @@ def upload_sketch(request, assignment_pk, tag, password):
     if request.method == 'POST':
         time = request.POST.get("time")
         files = request.FILES.getlist('sketches')
+        urls = []
+        # TODO: save the time_spent
         for f in files:
-            Sketch(image=f, user=assignment.user, assignment=assignment, time_spent=time).save()
+            sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
+            sketch.save()
+            urls.append(sketch.image.large.url)
         assignment.completed = True
         assignment.save()
+        return JsonResponse({
+            "success":True,
+            "images": urls
+        }, content_type="application/json")
     return render(request, 'upload.html', {
         "sketches": assignment.sketches.all(),
         "tag": assignment.moniker,
