@@ -145,7 +145,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
         
         <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
         {% for assignment in assignments %}
-          <h3 class="uk-margin-large-top">{{assignment.user.moniker}} → {{assignment.moniker}}</h3>
+          <h3 class="uk-margin-large-top">{{assignment.user_signup.tag}} → {{assignment.recipient_signup.tag}}</h3>
           {% if assignment.sketches.all|length == 1 %}
           {% with sketch=assignment.sketches.all.0 %}
             <div uk-grid>
@@ -155,7 +155,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                         data-src="{{sketch.image.url}}" 
                         width="{{sketch.image.width}}" 
                         height="{{sketch.image.height}}"
-                        alt="Graffiti Sketch of {{assignment.moniker}}" 
+                        alt="Graffiti Sketch of {{assignment.recipient_signup.tag}}" 
                         uk-img="target: !.uk-card -*, !.uk-card +*"
                         >
                 </div>
@@ -171,7 +171,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                     {% for sketch in assignment.sketches.all %}
                     <li>
                       <div>
-                        <img data-src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.moniker}}" width="{{sketch.image.width}}" width="{{sketch.image.height}}" uk-cover uk-img="target: !.uk-slideshow-items" style="max-height:100%">
+                        <img data-src="{{sketch.image.url}}" alt="Graffiti Sketch of {{assignment.recipient_signup.tag}}" width="{{sketch.image.width}}" width="{{sketch.image.height}}" uk-cover uk-img="target: !.uk-slideshow-items" style="max-height:100%">
                       </div>
                     </li>
                     {% endfor %}

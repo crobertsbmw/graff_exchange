@@ -133,7 +133,7 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
     <section id="content" class="uk-section uk-section-default">
       <div class="uk-container">
         <div class="uk-flex-middle" data-uk-scrollspy="target: > div; cls: uk-animation-slide-left-medium">
-          <h2>{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h2>
+          <h2>{{assignment.user_signup.tag}} → {{assignment.recipient_signup.tag}}</h2>
           <div data-uk-scrollspy-class="uk-animation-slide-right-medium">
             {% if assignment_sketches|length == 1 %}
               <div style="display:flex; align-items: center; justify-content:center;">
