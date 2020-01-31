@@ -14,7 +14,7 @@
     <meta name=msapplication-config content=/static/favicon/browserconfig.xml>
     <meta name=theme-color content=#ffffff>
 
-    <title>Review Sketch | GraffExchange.com</title>
+    <title>Confirm Signup | GraffExchange.com</title>
     <link href=/static/css/uikit.min.css rel=stylesheet>
 
     <!-- UIkit CSS -->
@@ -133,52 +133,41 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
     <section id="content" class="uk-section uk-section-default">
       <div class="uk-container">
         <div class="uk-flex-middle" data-uk-scrollspy="target: > div; cls: uk-animation-slide-left-medium">
-          <h2>{{assignment.user.moniker}} → {{assignment.recipient.moniker}}</h2>
-          <div data-uk-scrollspy-class="uk-animation-slide-right-medium">
-            {% if assignment_sketches|length == 1 %}
-              <div style="display:flex; align-items: center; justify-content:center;">
-                <div class="uk-card uk-card-default" style="padding:10px;">
-                  <img src="{{assignment_sketches.0.image.url}}">
-                </div>
-              </div>
-            {% else %}
-
-              <div class="uk-child-width-1-2@m uk-grid-medium uk-grid-match" uk-grid="masonry: true">
-                {% for sketch in assignment_sketches %}
-                  <div>
-                    <div class="uk-card uk-card-default uk-card-body" style="padding:10px; display:flex; align-items: center; justify-content:center;">
-                      <img src="{{sketch.image.url}}">
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}              
+          
+          <div class="uk-alert-success" uk-alert>
+            <h2>Confirmed 🎉</h2>
+            <p>You are confirmed as "{{signup.tag}}" for the February Exchange.</p>
+            <p>Assignments will be given on {{exchange.start_date|date:"l, M d"}}.</p>
+            <p>If you need, you can edit your details below, otherwise you are good to go.</p>
           </div>
+
           <div class="uk-grid uk-child-width-1-2@m uk-flex-middle">
             <div>
-              <h3 class="uk-margin-medium-top">Quick Questions</h3>
+              <h3 class="uk-margin-medium-top">Signup Details</h3>
               <form action="" method="post">
                 {% csrf_token %}
                 <div class="uk-margin">
-                  <div>On a scale of 1 to 100, how excited about this sketch are you?</div>
-                  <div uk-grid>
-                      <div class="uk-width-expand@s"><input id="excitement_slider" class="uk-range" type="range" name="excitement" value="47" min="0" max="100" step="1"></div>
-                      <div class="uk-width-auto@s"><span id="excitement_number"></span></div>
-                  </div>
-                  <div id="excitement_text">&nbsp;</div>
+
                   <div class="uk-margin uk-margin-medium-top">
-                    <div>Are you going to post the sketch <b>you</b> did on reddit?</div>
+                    <div>What do you write:</div>
+                    <input class="uk-input" type="text" name="tag" required value="{{signup.tag}}">
+                  </div>
+                  <div class="uk-margin uk-margin-medium-top">
+                    <div>Preferred Style</div>
                     <div class="uk-grid-small uk-child-width-auto uk-grid">
-                      <label><input class="uk-radio" type="radio" name="reddit" value="myself"> I want to post it myself.</label>
-                      <label><input class="uk-radio" type="radio" name="reddit" value="yes"> You can post it for me.</label>
-                      <label><input class="uk-radio" type="radio" name="reddit" value="no"> I would rather it not be posted to reddit.</label>
+                      <label><input class="uk-radio" type="radio" name="style" value="handstyle" {% if signup.style == "handstyle" %}checked{% endif %}> Tag / Handstyle</label>
+                      <label><input class="uk-radio" type="radio" name="style" value="throwie" {% if signup.style == "throwie" %}checked{% endif %}> Throwie</label>
+                      <label><input class="uk-radio" type="radio" name="style" value="piece"{% if signup.style == "piece" %}checked{% endif %}> Piece</label>
                     </div>
                   </div>
                   <div class="uk-margin uk-margin-medium-top">
-                  <div>Do you have any feedback or ideas on how we can improve&nbsp;the&nbsp;exchange?</div>
-                    <input class="uk-input" type="text" name="feedback">
+                    <div>Are you willing to do two, but only get one back? <span style="font-size:70%">(to cover for someone that doesn't follow through)</span></div>
+                    <div class="uk-grid-small uk-child-width-auto uk-grid">
+                      <label><input class="uk-radio" type="radio" name="do_double" value="true" {% if signup.do_double %}checked{% endif %}> Yeah, I can do two.</label>
+                      <label><input class="uk-radio" type="radio" name="do_double" value="false"{% if not signup.do_double %}checked{% endif %}> No, I only want to do one.</label>
+                    </div>
                   </div>
-                <button href="#" class="uk-button uk-button-primary uk-border-pill uk-margin-medium-top" data-uk-icon="arrow-right" type="submit">Submit</button>
+                <button href="#" class="uk-button uk-button-primary uk-border-pill uk-margin-medium-top" data-uk-icon="arrow-right" type="submit">Update</button>
                 </div>
               </form>
             </div>
@@ -197,28 +186,3 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
   
   </body>
 </html>
-
-<script>
-
-var slider = document.getElementById("excitement_slider");
-var slider_output = document.getElementById("excitement_number");
-var slider_text = document.getElementById("excitement_text");
-slider_output.innerHTML = slider.value; // Display the default slider value
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  slider_output.innerHTML = this.value;
-  var x = parseInt(this.value);
-  if (x < 10) {
-    slider_text.innerHTML = "Complete Garbage."
-  }else if (x < 55 && x > 45) {
-    slider_text.innerHTML = "Meh."
-  }else if (x > 90) {
-    slider_text.innerHTML = "Dope."
-  }
-  else{
-    slider_text.innerHTML = "&nbsp;"
-  }
-} 
-
-
-</script>

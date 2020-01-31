@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from exchange.models import User, Sketch, Assignment, Exchange
+from exchange.models import User, Sketch, Assignment, Exchange, Signup
 from django.contrib.gis.geoip2 import GeoIP2
 import itertools
 from django.http import JsonResponse
@@ -16,8 +16,37 @@ from django.contrib.auth import authenticate, login, logout
 #filter
 g = GeoIP2()
 
+def latest_exchange():
+    return Exchange.objects.all().order_by("-pk")[0]
+
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
+
+def confirm_signup(request, username, user_pk):
+    user = get_object_or_404(User, pk=user_pk)
+    if user.username.lower() != username.lower():
+        raise Http404("User Doesn't Exist")
+    auth_user(request, user)
+
+    exchange = latest_exchange()
+    signup, created = Signup.objects.get_or_create(exchange=exchange, user=user)
+    print(signup)
+    if created:
+        signup.tag = request.GET.get("tag")
+        signup.style = request.GET.get("style")
+        signup.do_double = request.GET.get("do_double", False)
+        signup.save()
+
+    if request.method == 'POST':
+        signup.tag = request.POST.get("tag")
+        signup.style = request.POST.get("style")
+        signup.do_double = request.POST.get("do_double", "false") == "true"
+        signup.save()
+        
+    return render(request, 'confirm_signup.html', {
+        "signup": signup,
+        "exchange": exchange
+    })
 
 def upload_sketch(request, assignment_pk, tag, password):
     print(request.POST)
@@ -26,13 +55,13 @@ def upload_sketch(request, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
-
-    auth_user(request, assignment.user)
+    if request.user != assignment.user:
+        auth_user(request, assignment.user)
     if request.method == 'POST':
         time = request.POST.get("time")
         files = request.FILES.getlist('sketches')
         urls = []
-        # TODO: save the time_spent
+        assignment.time_spent = time
         for f in files:
             sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
             sketch.save()
@@ -41,7 +70,7 @@ def upload_sketch(request, assignment_pk, tag, password):
         assignment.save()
         return JsonResponse({
             "success":True,
-            "images": urls
+            "images": urls,
         }, content_type="application/json")
     return render(request, 'upload.html', {
         "sketches": assignment.sketches.all(),

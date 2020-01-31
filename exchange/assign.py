@@ -48,8 +48,6 @@ for a,b in zip(piecers, piecers[1:]+piecers[:1]):
     ).save()
 
 
-
-
 #REMATCH emails
 exchange = Exchange.objects.all()[0]
 assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
@@ -58,9 +56,11 @@ for assignment in assignments:
 
 
 #CAN WE POST TO REDDIT?
-assignments = Assignment.objects.filter(can_post_to_reddit__isnull=False, posted_to_reddit=False)
+assignments = Assignment.objects.filter(can_post_to_reddit__isnull=False, posted_to_reddit=False, completed=True)
 for assignment in assignments:
     print("****")
-    print(assignment.can_post_to_reddit)
+    print("Reddit", assignment.can_post_to_reddit)
     print(assignment.user.moniker, "->", assignment.moniker)
     print(assignment.completed)
+
+

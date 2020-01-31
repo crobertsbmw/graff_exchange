@@ -38,15 +38,18 @@ class User(AbstractUser):
     city = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
 
+
 class Signup(models.Model):
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
-    moniker = models.CharField(max_length=255)
+    tag = models.CharField(max_length=255, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
     comments = models.CharField(max_length=1200, null=True, blank=True)
     do_double = models.BooleanField(default=False)
+    exchange = models.ForeignKey('Exchange', related_name="signups", related_query_name="signups", on_delete=models.CASCADE)
 
 def upload_to(instance, filename):
     return '%s/%s' % (instance.user.username, filename)
+
 
 class Sketch(models.Model):
     # image = models.ImageField(upload_to=upload_to)
@@ -98,6 +101,7 @@ class Assignment(models.Model):
     recipient = models.ForeignKey('User', related_name="favors", on_delete=models.CASCADE)
     recipient_signup = models.ForeignKey('Signup', related_name="favors", related_query_name="favor", on_delete=models.CASCADE, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
+    time_spent = models.CharField(max_length=255, blank=True, null=True)
     rematch = models.BooleanField(default=False)
     moniker = models.CharField(max_length=255)
     password = models.CharField(max_length=10, default=rand_string)
