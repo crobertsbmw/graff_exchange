@@ -7,7 +7,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'moniker', 'level', 'write_style', 'recieve_style','do_double', 'comments', 'country', 'city')
 
 class AssignAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'rematch')
+    list_display = ('__str__', 'rematch', 'completed', 'excitement', 'time_spent')
 
 class SketchAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_recipient', 'exchange')
