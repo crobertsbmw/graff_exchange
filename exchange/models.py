@@ -103,7 +103,6 @@ class Assignment(models.Model):
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
     time_spent = models.CharField(max_length=255, blank=True, null=True)
     rematch = models.BooleanField(default=False)
-    moniker = models.CharField(max_length=255)
     password = models.CharField(max_length=10, default=rand_string)
     review_password = models.CharField(max_length=10, default=rand_string)
     completed = models.BooleanField(default=False)
