@@ -33,7 +33,7 @@ def confirm_signup(request, username, user_pk):
     print(signup)
     if created:
         signup.tag = user.moniker
-        signup.style = user.style
+        signup.style = user.write_style
         signup.do_double = user.do_double
         signup.save()
 
