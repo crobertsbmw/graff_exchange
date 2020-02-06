@@ -41,6 +41,8 @@ class User(AbstractUser):
         if self.first_name:
             return self.first_name
         return self.moniker
+    def confirm_link():
+        return "https://graffexchange.com/confirm_signup/"+self.username+"/"+str(self.pk)
 
 class Signup(models.Model):
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
@@ -95,9 +97,9 @@ class Sketch(models.Model):
 class Assignment(models.Model):
     def __str__(self):
         if self.style:
-            return self.user.moniker+" -> "+self.moniker+" ("+self.style+")"
+            return self.user_signup.tag+" -> "+self.recipient_signup.tag+" ("+self.style+")"
         else:
-            return self.user.moniker+" -> "+self.moniker
+            return self.user_signup.tag+" -> "+self.recipient_signup.tag
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user_signup = models.ForeignKey('Signup', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE, null=True, blank=True)
