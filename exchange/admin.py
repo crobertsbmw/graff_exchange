@@ -17,7 +17,7 @@ class SketchAdmin(admin.ModelAdmin):
     get_recipient.admin_order_field = 'assignment__recipient__moniker'
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('get_email', 'tag', 'get_level', 'style', 'do_double', 'comments')
+    list_display = ('get_email', 'tag', 'exchange', 'get_level', 'style', 'do_double', 'comments')
     def get_level(self, obj):
         return obj.user.level
     def get_email(self, obj):
