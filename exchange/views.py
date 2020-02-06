@@ -29,12 +29,15 @@ def confirm_signup(request, username, user_pk):
     auth_user(request, user)
 
     exchange = latest_exchange()
+
     signup, created = Signup.objects.get_or_create(exchange=exchange, user=user)
-    print(signup)
     if created:
         signup.tag = user.moniker
         signup.style = user.write_style
         signup.do_double = user.do_double
+        do_double = request.GET.get("do_double")
+        if do_double:
+            signup.do_double = do_double=="true"
         signup.save()
 
     if request.method == 'POST':
@@ -45,7 +48,7 @@ def confirm_signup(request, username, user_pk):
         
     return render(request, 'confirm_signup.html', {
         "signup": signup,
-        "exchange": exchange
+        "exchange": exchange,
     })
 
 def upload_sketch(request, assignment_pk, tag, password):

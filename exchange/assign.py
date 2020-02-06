@@ -66,9 +66,18 @@ for assignment in assignments:
 
 #Send Signup Confirmation email.
 exchange = Exchange.objects.get(name="Feb 2020")
-for user in Exchange.users.all():
-    print(user.email, user.first_name)
+user_pks = []
+for user in exchange.users.all():
+    user_pks.append(user.pk)
+    first_name = user.first_name
+    if not first_name:
+        first_name = user.moniker
+    link = "https://graffexchange.com/confirm_signup/"+user.username+"/"+str(user.pk)
+    print(user.email, "|", user.name(), "|", link)
 
 
-
-
+users = User.objects.all().exclude(pk__in=user_pks)
+for user in users:
+    link = "https://graffexchange.com/confirm_signup/"+user.username+"/"+str(user.pk)
+    print(user.email, "|", user.name(), "|", link)
+    user.do_double
