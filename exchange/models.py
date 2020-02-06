@@ -37,7 +37,10 @@ class User(AbstractUser):
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
-
+    def name(self):
+        if self.first_name:
+            return self.first_name
+        return self.moniker
 
 class Signup(models.Model):
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)

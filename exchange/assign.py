@@ -64,3 +64,11 @@ for assignment in assignments:
     print(assignment.completed)
 
 
+#Send Signup Confirmation email.
+exchange = Exchange.objects.get(name="Feb 2020")
+for user in Exchange.users.all():
+    print(user.email, user.first_name)
+
+
+
+

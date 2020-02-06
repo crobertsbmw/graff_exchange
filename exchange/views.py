@@ -32,9 +32,9 @@ def confirm_signup(request, username, user_pk):
     signup, created = Signup.objects.get_or_create(exchange=exchange, user=user)
     print(signup)
     if created:
-        signup.tag = request.GET.get("tag")
-        signup.style = request.GET.get("style")
-        signup.do_double = request.GET.get("do_double", False)
+        signup.tag = user.moniker
+        signup.style = user.style
+        signup.do_double = user.do_double
         signup.save()
 
     if request.method == 'POST':
