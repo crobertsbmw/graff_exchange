@@ -51,6 +51,8 @@ class User(AbstractUser):
             return False
 
 class Signup(models.Model):
+    def __str__(self):
+        return self.tag
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
     tag = models.CharField(max_length=255, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
