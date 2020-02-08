@@ -44,12 +44,8 @@ class User(AbstractUser):
     def confirm_link(self):
         return "https://graffexchange.com/confirm_signup/"+self.username+"/"+str(self.pk)
     def signed_up(self):
-        try:
-            self.signups.get(exchange=Exchange.latest())
-            return True
-        except Signup.DoesNotExist:
-            return False
-
+        return self.signups.filter(exchange=Exchange.latest()).count() > 0
+        
 class Signup(models.Model):
     def __str__(self):
         return self.tag + "("+ str(self.user.level) +")"
