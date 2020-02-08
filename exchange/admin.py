@@ -4,7 +4,10 @@ from django.contrib import admin
 from exchange.models import User, Sketch, Assignment, Exchange, Signup
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'moniker', 'level', 'write_style', 'recieve_style','do_double', 'comments', 'country', 'city')
+    list_display = ('email', 'moniker', 'level', 'signed_up', 'comments', 'country', 'city')
+    def signed_up(self, obj):
+        return obj.signed_up()
+    signed_up.boolean = True
 
 class AssignAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'rematch', 'completed', 'excitement', 'time_spent')

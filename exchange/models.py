@@ -41,8 +41,14 @@ class User(AbstractUser):
         if self.first_name:
             return self.first_name
         return self.moniker
-    def confirm_link():
+    def confirm_link(self):
         return "https://graffexchange.com/confirm_signup/"+self.username+"/"+str(self.pk)
+    def signed_up(self):
+        try:
+            self.signups.get(exchange=Exchange.latest())
+            return True
+        except Signup.DoesNotExist:
+            return False
 
 class Signup(models.Model):
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
@@ -129,4 +135,7 @@ class Exchange(models.Model):
     users = models.ManyToManyField(User, blank=True)
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
+
+    def latest():
+        return Exchange.objects.all().order_by("-pk")[0]
 

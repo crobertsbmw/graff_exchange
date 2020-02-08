@@ -16,8 +16,6 @@ from django.contrib.auth import authenticate, login, logout
 #filter
 g = GeoIP2()
 
-def latest_exchange():
-    return Exchange.objects.all().order_by("-pk")[0]
 
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
@@ -28,7 +26,7 @@ def confirm_signup(request, username, user_pk):
         raise Http404("User Doesn't Exist")
     auth_user(request, user)
 
-    exchange = latest_exchange()
+    exchange = Exchange.latest()
 
     signup, created = Signup.objects.get_or_create(exchange=exchange, user=user)
     if created:
