@@ -52,7 +52,7 @@ def confirm_signup(request, username, user_pk):
 def upload_sketch(request, assignment_pk, tag, password):
     print(request.POST)
     assignment = Assignment.objects.get(pk=assignment_pk)
-    if assignment.moniker.lower() != tag.lower():
+    if assignment.recipient_signup.tag.lower() != tag.lower():
         raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
