@@ -75,7 +75,7 @@ def upload_sketch(request, assignment_pk, tag, password):
         }, content_type="application/json")
     return render(request, 'upload.html', {
         "sketches": assignment.sketches.all(),
-        "tag": assignment.moniker,
+        "tag": assignment.recipient_signup.tag,
     })
 
 

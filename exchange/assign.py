@@ -1,50 +1,64 @@
 from exchange.models import *
-
+import random
 #get the exchange we want to make assignments for
-exchange = Exchange.latest()
+exchange = Exchange.this_month()
 signups = exchange.signups.all() # get our users
 
 #sort by style
 handstylers = list(signups.filter(style="handstyle").all().order_by("-user__level"))
+random.shuffle(handstylers)
+
 for a,b in zip(handstylers, handstylers[1:]+handstylers[:1]):
     Assignment(
         exchange=exchange,
-        user = a,
-        recipient = b,
+        user_signup = a,
+        recipient_signup = b,
         style = "handstyle",
         rematch = False,
-        moniker = b.moniker
     ).save()
-    
+   
+a, b = handstylers[2], handstylers[1]
+Assignment(
+    exchange=exchange,
+    user = a.user,
+    user_signup = a,
+    recipient = b.user,
+    recipient_signup = b,
+    style = "handstyle",
+    rematch = False,
+).save()
+
 
 throwers = list(signups.filter(style="throwie").all().order_by("-user__level"))
 #put all the newbies with eachother. and match the two remaining because they are similar level
 for a,b in zip(throwers, throwers[1:]+throwers[:1]):
     Assignment(
         exchange=exchange,
-        user = a,
-        recipient = b,
+        user = a.user,
+        user_signup = a,
+        recipient = b.user,
+        recipient_signup = b,
         style = "throwie",
         rematch = False,
-        moniker = b.moniker
     ).save()
 
 
 
 #match the 10's 9's and 8'
-piecers = list(signups.filter(style="piece").all().order_by("-user__level"))
-for u in piecers:
-    print(u.level, u.moniker)
+piecers = list(signups.filter(style="piece").filter(user__level__lt=7).order_by("-user__level"))
+random.shuffle(piecers)
+for s in piecers:
+    print(s.user.level, s.user.moniker)
 
 for a,b in zip(piecers, piecers[1:]+piecers[:1]):
-    print(a, b)
     Assignment(
         exchange=exchange,
-        user = a,
-        recipient = b,
+        user = a.user,
+        user_signup = a,
+        recipient = b.user,
+        recipient_signup = b,
         style = "piece",
         rematch = False,
-        moniker = b.moniker
     ).save()
 
 
@@ -107,4 +121,10 @@ for user in users:
     # print(m)
     email = EmailMessage('Graff Exchange Confirmation', m, to=[user.email])
     email.send()
+
+
+exchange = Exchange.objects.all()[0]
+assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
+for assignment in assignments:
+    print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
 
