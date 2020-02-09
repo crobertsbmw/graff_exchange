@@ -98,7 +98,7 @@ Chase
 '''
 
 from django.core.mail import EmailMessage
-users = User.objects.filter(pk__gte=113)
+users = User.objects.filter(pk__gte=113).exclude(pk=115)
 for user in users:
     link = "https://graffexchange.com/confirm_signup/"+user.username+"/"+str(user.pk)
     m = message.replace('{first_name}', user.name()).replace('{link}', link)

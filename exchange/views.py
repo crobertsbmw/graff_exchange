@@ -196,7 +196,7 @@ def review_sketches(request, exchange_name, assignment_pk, tag, password):
 def signup(request):
     if request.method == 'POST':
         email = request.POST["email"].lower().strip()
-        exchange = Exchange.objects.get(name="Feb 2020")
+        exchange = Exchange.latest()
         try:
             user = exchange.users.objects.get(email=email)
             return render(request, 'already_signed_up.html', {

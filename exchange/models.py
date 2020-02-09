@@ -134,6 +134,10 @@ class Exchange(models.Model):
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
 
+    def this_month():
+        d = datetime.datetime.now()
+        name = d.strftime("%b %Y")
+        return Exchange.objects.get(name=name)
     def latest():
         return Exchange.objects.all().order_by("-pk")[0]
 
