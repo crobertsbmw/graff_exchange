@@ -48,7 +48,7 @@ class User(AbstractUser):
         
 class Signup(models.Model):
     def __str__(self):
-        return self.tag + "("+ str(self.user.level) +")"
+        return self.tag + "("+ str(self.user.level) +")"+" | "+self.exchange.name
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
     tag = models.CharField(max_length=255, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
@@ -102,9 +102,9 @@ class Assignment(models.Model):
     def __str__(self):
         try:
             if self.style:
-                return self.user_signup.tag+" -> "+self.recipient_signup.tag+" ("+self.style+")"
+                return self.user_signup.tag+" -> "+self.recipient_signup.tag+" ("+self.style+") | "+self.exchange.name
             else:
-                return self.user_signup.tag+" -> "+self.recipient_signup.tag
+                return self.user_signup.tag+" -> "+self.recipient_signup.tag+" | "+self.exchange.name
         except:
             return self.user.moniker+" -> "+self.recipient.moniker
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
