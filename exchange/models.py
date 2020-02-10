@@ -73,7 +73,7 @@ class Sketch(models.Model):
     exchange = models.ForeignKey('Exchange', related_name="sketches", related_query_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
-        return str(self.user)+"->"+str(self.assignment.recipient)
+        return str(self.assignment.user_signup.tag)+"->"+str(self.assignment.recipient_signup.tag)
 
     def rotate(self):
         im = Image.open(self.image.file)
