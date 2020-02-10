@@ -15,9 +15,9 @@ class AssignAdmin(admin.ModelAdmin):
 class SketchAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_recipient', 'exchange')
     def get_recipient(self, obj):
-        return obj.assignment.recipient.moniker
+        return obj.assignment.recipient_signup.tag
     get_recipient.short_description = 'Recipient'
-    get_recipient.admin_order_field = 'assignment__recipient__moniker'
+    get_recipient.admin_order_field = 'assignment__recipient_signup__tag'
 
 class SignupAdmin(admin.ModelAdmin):
     list_display = ('get_email', 'tag', 'exchange', 'get_level', 'style', 'do_double', 'comments')
@@ -29,7 +29,6 @@ class SignupAdmin(admin.ModelAdmin):
     get_level.admin_order_field = 'user__level'
     get_email.short_description = 'Email'
     get_email.admin_order_field = 'user__email'
-
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Signup, SignupAdmin)

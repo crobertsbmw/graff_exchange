@@ -1,5 +1,6 @@
 TODO:
 Update the signup so we don't get duplicate users created.
+Update the upload so that we don't rely on the tag being one word...
 Put a level field on each of the Assignments.
 Create a better assignment dashboard.
 

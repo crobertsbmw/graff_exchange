@@ -133,7 +133,8 @@ class Exchange(models.Model):
     users = models.ManyToManyField(User, blank=True)
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
-
+    completed = models.BooleanField(default=False
+        )
     def this_month():
         d = datetime.datetime.now()
         name = d.strftime("%b %Y")

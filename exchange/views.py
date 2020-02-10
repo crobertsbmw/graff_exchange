@@ -87,7 +87,7 @@ def rematch_guide(request, exchange=None):
     if exchange:
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
-        exchange = Exchange.objects.all().order_by("-pk")[0]
+        exchange = Exchange.this_month()
     assignments = list(Assignment.objects.filter(exchange=exchange))
     if request.method == 'POST':
         pass
@@ -154,7 +154,7 @@ def review(request, exchange=None):
     if exchange:
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
-        exchange = Exchange.objects.all().order_by("-pk")[0]
+        exchange = Exchange.objects.filter(completed=True).order_by("-pk")[0]
     assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
