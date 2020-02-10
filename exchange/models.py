@@ -100,10 +100,13 @@ class Sketch(models.Model):
 
 class Assignment(models.Model):
     def __str__(self):
-        if self.style:
-            return self.user_signup.tag+" -> "+self.recipient_signup.tag+" ("+self.style+")"
-        else:
-            return self.user_signup.tag+" -> "+self.recipient_signup.tag
+        try:
+            if self.style:
+                return self.user_signup.tag+" -> "+self.recipient_signup.tag+" ("+self.style+")"
+            else:
+                return self.user_signup.tag+" -> "+self.recipient_signup.tag
+        except:
+            return self.user.moniker+" -> "+self.recipient.moniker
     exchange = models.ForeignKey('Exchange', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE)
     user_signup = models.ForeignKey('Signup', related_name="assignments", related_query_name="assignment", on_delete=models.CASCADE, null=True, blank=True)
@@ -134,7 +137,7 @@ class Exchange(models.Model):
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField(default=False)
-    
+
     def this_month():
         d = datetime.datetime.now()
         name = d.strftime("%b %Y")
