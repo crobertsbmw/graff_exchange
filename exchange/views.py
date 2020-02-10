@@ -136,7 +136,7 @@ def sortedAssignments(exchange):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient=assignment.user, exchange=exchange)
+            next_assignments = Assignment.objects.filter(recipient_signup=assignment.user_signup, exchange=exchange, style=assignment.style)
             for na in next_assignments:
                 if na.completed:
                     sorted_assignments.append(na)
@@ -145,10 +145,8 @@ def sortedAssignments(exchange):
         sorted_assignments.reverse()
         assignment_groups.append(sorted_assignments)
         loop_count += 1
-
     chain = itertools.chain(*assignment_groups)
     return list(chain)
-    
 
 
 def review(request, exchange=None):
@@ -156,6 +154,8 @@ def review(request, exchange=None):
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
         exchange = Exchange.objects.filter(completed=True).order_by("-pk")[0]
+    if not (exchange.completed or request.user.is_superuser()):
+        return True
     assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
