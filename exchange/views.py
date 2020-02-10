@@ -154,8 +154,8 @@ def review(request, exchange=None):
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
     else:
         exchange = Exchange.objects.filter(completed=True).order_by("-pk")[0]
-    if not (exchange.completed or request.user.is_superuser()):
-        return True
+    if not exchange.completed and not request.user.is_superuser():
+        return Http404("Exchange Not yet Available")
     assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
