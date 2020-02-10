@@ -65,6 +65,7 @@ def upload_sketch(request, assignment_pk, tag, password):
         assignment.time_spent = time
         for f in files:
             sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
+            sketch.exchange = Exchange.this_month()
             sketch.save()
             urls.append(sketch.image.large.url)
         assignment.completed = True
@@ -135,7 +136,7 @@ def sortedAssignments(exchange):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient=assignment.user)
+            next_assignments = Assignment.objects.filter(recipient=assignment.user, exchange=exchange)
             for na in next_assignments:
                 if na.completed:
                     sorted_assignments.append(na)

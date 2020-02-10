@@ -72,8 +72,8 @@ class Sketch(models.Model):
     time_spent = models.CharField(max_length=255, blank=True, null=True)
     exchange = models.ForeignKey('Exchange', related_name="sketches", related_query_name="sketches", on_delete=models.SET_NULL, null=True, blank=True)
     
-    # def __str__(self):
-    #     return str(self.assignment.user_signup.tag)+"->"+str(self.assignment.recipient_signup.tag)
+    def __str__(self):
+        return str(self.assignment)
 
     def rotate(self):
         im = Image.open(self.image.file)
@@ -133,8 +133,8 @@ class Exchange(models.Model):
     users = models.ManyToManyField(User, blank=True)
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
-    completed = models.BooleanField(default=False
-        )
+    completed = models.BooleanField(default=False)
+    
     def this_month():
         d = datetime.datetime.now()
         name = d.strftime("%b %Y")
