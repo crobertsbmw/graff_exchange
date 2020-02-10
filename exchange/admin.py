@@ -15,7 +15,10 @@ class AssignAdmin(admin.ModelAdmin):
 class SketchAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_recipient', 'exchange')
     def get_recipient(self, obj):
-        return obj.assignment.recipient_signup.tag
+        if obj.assignment.recipient_signup:
+            return obj.assignment.recipient_signup.tag
+        else:
+            return obj.assignment.recipient.username
     get_recipient.short_description = 'Recipient'
     get_recipient.admin_order_field = 'assignment__recipient_signup__tag'
 
