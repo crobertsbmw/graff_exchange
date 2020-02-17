@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
@@ -44,5 +45,48 @@ for assignment in assignments:
     print("sending to ", assignment.user_signup.user.email)
     print(m)
     email = EmailMessage('Graff Exchange Assignment', m, to=[assignment.user_signup.user.email])
+    email.send()
+
+
+
+# Reminder Email
+
+from django.core.mail import EmailMessage
+from exchange.models import *
+assignments = Exchange.this_month().assignments.all()
+
+message = '''{first_name},
+Just a reminder that the deadline for sketches is Monday. So you have two days to finish your sketch for "{tag}". Then we're going to do rematches for people who didn't get one back, so it'll probably be another week before I release all the results.
+
+Thanks,
+Chase
+'''
+message_rematch = '''{first_name},
+Just a reminder that the deadline for sketches is Monday. So you have two days to finish your sketch for "{tag}". Then, if your still up for it, I might ask you to do another for the rematch. If I do need you to do another, how much time do you think you would need? Would 5 days be enough?
+
+Thanks,
+Chase
+'''
+
+for assignment in assignments:
+    if assignment.completed:
+        print("continueing")
+        continue
+    if assignment.user_signup.user.email == 'LeightonJaco@gmail.com':
+        print("leghton")
+        continue
+    if assignment.user_signup.do_double:
+        m = message_rematch
+    else:
+        m = message
+    name = assignment.user_signup.user.first_name
+    if not name:
+        name = assignment.user_signup.tag
+    m = m.replace('{first_name}', name)
+    m = m.replace('{tag}', assignment.recipient_signup.tag)
+    print('*****')
+    print("sending to ", assignment.user_signup.user.email)
+    # print(m)
+    email = EmailMessage('Graffiti Exchange Reminder', m, to=[assignment.user_signup.user.email])
     email.send()
 

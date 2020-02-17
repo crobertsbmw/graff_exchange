@@ -110,7 +110,7 @@ def rematch_guide(request, exchange=None):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient=assignment.user)
+            next_assignments = Assignment.objects.filter(recipient=assignment.user, exchange=exchange)
             for na in next_assignments:
                 sorted_assignments.append(na)
                 if not na.rematch:
@@ -155,7 +155,7 @@ def review(request, exchange=None):
     else:
         exchange = Exchange.objects.filter(completed=True).order_by("-pk")[0]
     if not exchange.completed and not request.user.is_superuser:
-        return Http404("Exchange Not yet Available")
+        raise Http404("Exchange Not yet Available")
     assignments = sortedAssignments(exchange)
     if request.method == 'POST':
         pass
