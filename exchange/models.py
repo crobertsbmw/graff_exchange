@@ -48,7 +48,10 @@ class User(AbstractUser):
         
 class Signup(models.Model):
     def __str__(self):
-        return self.tag + "("+ str(self.user.level) +")"+" | "+self.exchange.name
+        try:
+            return self.tag + "("+ str(self.user.level) +")"+" | "+self.exchange.name
+        except:
+            return str(self.pk)
     user = models.ForeignKey('User', related_name="signups", on_delete=models.CASCADE)
     tag = models.CharField(max_length=255, null=True, blank=True)
     style = models.CharField(max_length=255, choices=STYLES, null=True, blank=True)
@@ -123,7 +126,10 @@ class Assignment(models.Model):
     posted_to_reddit = models.BooleanField(default=False)
 
     def upload_link(self):
-        return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.password+"/"
+        try:
+            return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.password+"/"
+        except:
+            return "https://graffexchange.com/upload/whatever/"
     def review_link(self):
         return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.review_password+"/"
 

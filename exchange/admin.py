@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     signed_up.boolean = True
 
 class AssignAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'rematch', 'completed', 'excitement', 'time_spent')
+    list_display = ('__str__', 'rematch', 'completed', 'excitement', 'time_spent', 'upload_link')
 
 class SketchAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_recipient', 'exchange')
