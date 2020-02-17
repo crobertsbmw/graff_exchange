@@ -110,7 +110,7 @@ def rematch_guide(request, exchange=None):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient=assignment.user, exchange=exchange)
+            next_assignments = Assignment.objects.filter(recipient=assignment.user, exchange=exchange, style=assignment.style)
             for na in next_assignments:
                 sorted_assignments.append(na)
                 if not na.rematch:
