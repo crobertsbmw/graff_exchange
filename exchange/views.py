@@ -125,28 +125,25 @@ def rematch_guide(request, exchange=None):
 
 def sortedAssignments(exchange):
     assignments = list(Assignment.objects.filter(exchange=exchange, rematch=False))
-    #get the exchange circles.
     assignment_groups = []
-    loop_count = 0 
-    while len(assignments) > 0 and loop_count < 1000:
-        print("*******")
+    loop_counter = 0
+    while len(assignments) > 0 and loop_counter < 500:
+        assignment_group = []
         assignment = assignments[0]
-        sorted_assignments = []
+        loop_counter+=1
         while assignment in assignments:
-            print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient_signup=assignment.user_signup, exchange=exchange)
-            for na in next_assignments:
-                if na.completed:
-                    sorted_assignments.append(na)
-                if not na.rematch and na.style == assignment.style:
-                    assignment = na
-
-        sorted_assignments.reverse()
-        assignment_groups.append(sorted_assignments)
-        loop_count += 1
+            #add the rematches
+            rematches = Assignment.objects.filter(recipient_signup=assignment.recipient_signup, rematch=True, exchange=exchange)
+            [assignment_group.append(rematch) for rematch in rematches]
+            assignment_group.append(assignment)
+            #get the next assignment
+            assignment = Assignment.objects.get(user_signup=assignment.recipient_signup, exchange=exchange, rematch=False, style=assignment.style)
+        #close out the group
+        assignment_groups.append(assignment_group)
     chain = itertools.chain(*assignment_groups)
     return list(chain)
+
 
 
 def review(request, exchange=None):
