@@ -142,7 +142,8 @@ def sortedAssignments(exchange):
         #close out the group
         assignment_groups.append(assignment_group)
     chain = itertools.chain(*assignment_groups)
-    return list(chain)
+    assignments = list(chain)
+    return [x for x in assignments if x.completed]
 
 
 
