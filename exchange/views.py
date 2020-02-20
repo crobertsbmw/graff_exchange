@@ -16,7 +16,6 @@ from django.contrib.auth import authenticate, login, logout
 #filter
 g = GeoIP2()
 
-
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
 
@@ -56,7 +55,7 @@ def upload_sketch(request, assignment_pk, tag, password):
         raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
-    if request.user != assignment.user:
+    if request.user != assignment.user and not request.user.is_superuser:
         auth_user(request, assignment.user)
     if request.method == 'POST':
         time = request.POST.get("time")
@@ -136,12 +135,13 @@ def sortedAssignments(exchange):
         while assignment in assignments:
             print(assignment)
             assignments.remove(assignment)
-            next_assignments = Assignment.objects.filter(recipient_signup=assignment.user_signup, exchange=exchange, style=assignment.style)
+            next_assignments = Assignment.objects.filter(recipient_signup=assignment.user_signup, exchange=exchange)
             for na in next_assignments:
                 if na.completed:
                     sorted_assignments.append(na)
-                if not na.rematch:
+                if not na.rematch and na.style == assignment.style:
                     assignment = na
+
         sorted_assignments.reverse()
         assignment_groups.append(sorted_assignments)
         loop_count += 1

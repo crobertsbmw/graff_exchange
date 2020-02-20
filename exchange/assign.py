@@ -63,7 +63,7 @@ for a,b in zip(piecers, piecers[1:]+piecers[:1]):
 
 
 #REMATCH emails
-exchange = Exchange.objects.all()[0]
+exchange = Exchange.this_month()
 assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
 for assignment in assignments:
     print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())

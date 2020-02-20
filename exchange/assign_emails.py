@@ -128,3 +128,102 @@ for assignment in assignments:
     # email = EmailMessage('Graffiti Exchange Reminder', m, to=[assignment.user_signup.user.email])
     # email.send()
 
+
+#REMATCHES
+#find all the people that need a grade
+from exchange.models import *
+users = User.objects.filter(level=0)
+for user in users:
+    if user.portfolio.all().count() > 0:
+        print(user.email, user.moniker)
+
+#make assignments
+from exchange.models import *
+assignments = Exchange.this_month().assignments.filter(completed=False)
+needers = []
+for assignment in assignments:
+    recipient_a = Assignment.objects.get(user_signup=assignment.recipient_signup, style=assignment.style).order_by("-user_signup__user__level")
+    if recipient_a.completed:
+        needers.append(assignment.recipient_signup)
+        #we need to do a rematch
+        print("Needs rematch", assignment.recipient_signup)
+
+doublers = []
+doublers_a = Exchange.this_month().assignments.filter(completed=True, user_signup__do_double=True)
+for doubler in doublers_a:
+    doublers.append(doubler.user_signup)
+
+random.shuffle(doublers)
+
+for needer in needers:
+    best_match = doublers[0]
+    for doubler in doublers:
+        if doubler == needer:
+            continue
+        elif Assignment.objects.filter(user_signup__user=doubler.user, recipient_signup__user=needer.user).count() > 0:
+            continue
+        elif Exchange.this_month().assignments.filter(user_signup__user=needer.user, recipient_signup__user=doubler.user).count() > 0:
+            continue
+        elif doubler.user.level == needer.user.level:
+            print("pair", doubler, "->", needer)
+            doublers.remove(doubler)
+            break
+        elif doubler.user.level < needer.user.level:
+            continue
+        elif doubler.user.level > best_match.user.level:
+            continue
+        best_match = doubler
+    else:
+        print("apair", best_match, "->", needer)
+        doublers.remove(best_match)
+
+#--------------
+
+from exchange.models import *
+assignments = Exchange.this_month().assignments.filter(completed=False).order_by("user_signup__user__level")
+needers = []
+for assignment in assignments:
+    recipient_a = Assignment.objects.get(user_signup=assignment.recipient_signup, style=assignment.style)
+    if recipient_a.completed:
+        needers.append(assignment.recipient_signup)
+        #we need to do a rematch
+        print("Needs rematch", assignment.recipient_signup)
+
+doublers = []
+doublers_a = Exchange.this_month().assignments.filter(completed=True, user_signup__do_double=True)
+for doubler in doublers_a:
+    doublers.append(doubler.user_signup)
+
+random.shuffle(doublers)
+
+assignments = []
+for needer in needers:
+    for doubler in doublers:
+        if doubler == needer:
+            continue
+        elif Assignment.objects.filter(user_signup__user=doubler.user, recipient_signup__user=needer.user).count() > 0:
+            continue
+        elif Exchange.this_month().assignments.filter(user_signup__user=needer.user, recipient_signup__user=doubler.user).count() > 0:
+            continue
+        elif doubler.user.level < needer.user.level:
+            continue
+        print("pair", doubler, "->", needer)
+        assignments.append(Assignment(
+            exchange=Exchange.this_month(),
+            user = doubler.user,
+            user_signup = doubler,
+            recipient = needer.user,
+            recipient_signup = needer,
+            style = "piece",
+            rematch = True,
+        ))
+        doublers.remove(doubler)
+        break
+
+
+exchange = Exchange.this_month()
+assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
+for assignment in assignments:
+    print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
+    
+
