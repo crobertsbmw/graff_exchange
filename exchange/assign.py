@@ -128,3 +128,5 @@ assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
 for assignment in assignments:
     print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
 
+
+

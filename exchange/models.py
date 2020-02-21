@@ -130,6 +130,7 @@ class Assignment(models.Model):
             return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.password+"/"
         except:
             return "https://graffexchange.com/upload/whatever/"
+    
     def review_link(self):
         return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.review_password+"/"
 

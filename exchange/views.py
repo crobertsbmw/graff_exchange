@@ -169,8 +169,6 @@ def review_sketches(request, exchange_name, assignment_pk, tag, password):
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     if exchange != assignment.exchange:
         raise Http404("Sketch doesn't exist")
-    if assignment.moniker.lower() != tag.lower():
-        raise Http404("Tag doesn't exist")
     if assignment.review_password != password:
         raise Http404("Incorrect Password")
     auth_user(request, assignment.user)
