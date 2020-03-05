@@ -78,8 +78,8 @@ for assignment in assignments:
     print(assignment.completed)
 
 
-#Send Signup Confirmation email.
-exchange = Exchange.objects.get(name="Feb 2020")
+#Send Signup Confirmation email to the people who have signed up.
+exchange = Exchange.objects.get(name="Mar 2020")
 user_pks = []
 for user in exchange.users.all():
     user_pks.append(user.pk)
@@ -90,6 +90,7 @@ for user in exchange.users.all():
     print(user.email, "|", user.name(), "|", link)
 
 
+#send an email to everyone else who hasn't done this yet.
 users = User.objects.all().exclude(pk__in=user_pks)
 for user in users:
     link = "https://graffexchange.com/confirm_signup/"+user.username+"/"+str(user.pk)
@@ -98,7 +99,6 @@ for user in users:
 
 
 #SEND EMAILS TO PEOPLE
-
 message = '''{first_name},
 Thanks for signing up for the graffiti exchange! I just need to confirm your email address. If you can just click this link then you should be good to go:
 

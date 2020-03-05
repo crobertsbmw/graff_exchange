@@ -62,7 +62,6 @@ class Signup(models.Model):
 def upload_to(instance, filename):
     return '%s/%s' % (instance.user.username, filename)
 
-
 class Sketch(models.Model):
     # image = models.ImageField(upload_to=upload_to)
     image = JPEGField(
@@ -144,6 +143,12 @@ class Exchange(models.Model):
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField(default=False)
+    sign_up_date = models.DateField(null=True, blank=True)
+    assignment_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    rematch_due_date = models.DateField(null=True, blank=True)
+    results_date = models.DateField(null=True, blank=True)
+
 
     def this_month():
         d = datetime.datetime.now()

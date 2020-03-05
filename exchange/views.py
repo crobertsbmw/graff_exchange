@@ -66,6 +66,7 @@ def upload_sketch(request, assignment_pk, tag, password):
             sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
             sketch.exchange = Exchange.this_month()
             sketch.save()
+            sketch.resize()
             urls.append(sketch.image.large.url)
         assignment.completed = True
         assignment.save()
