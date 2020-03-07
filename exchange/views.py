@@ -33,7 +33,6 @@ def confirm_signup(request, username, user_pk):
         signup.style = user.write_style
         signup.do_double = user.do_double
         do_double = request.GET.get("do_double")
-        log_string += do_double
         if do_double:
             signup.do_double = do_double=="true"
         signup.save()

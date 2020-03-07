@@ -1,6 +1,5 @@
 TODO:
-Update the signup so we don't get duplicate users created.
+Make sure the upload stuff works the way it's supposed to.
+Make a dashboard for people to see that they are confirmed for the exchange.
 Update the upload so that we don't rely on the tag being one word...
 Put a level field on each of the Assignments.
-Create a better assignment dashboard.
-
