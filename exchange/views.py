@@ -38,7 +38,7 @@ def confirm_signup(request, username, user_pk):
         if do_double:
             log_string += "inside"
             signup.do_double = do_double=="true"
-            log_string += "|"+signup.do_double
+            log_string += "|"+str(signup.do_double)
         signup.save()
 
     if request.method == 'POST':
