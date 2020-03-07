@@ -1,6 +1,6 @@
 from PIL import Image
 from django.http import Http404
-import json, random, string
+import json, random, string, datetime
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
