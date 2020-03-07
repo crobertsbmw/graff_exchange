@@ -32,9 +32,13 @@ def confirm_signup(request, username, user_pk):
         signup.tag = user.moniker
         signup.style = user.write_style
         signup.do_double = user.do_double
+        log_string = "a"
         do_double = request.GET.get("do_double")
+        log_string =+ do_double
         if do_double:
+            log_string =+ "inside"
             signup.do_double = do_double=="true"
+            log_string =+ "|"+signup.do_double
         signup.save()
 
     if request.method == 'POST':
@@ -46,7 +50,8 @@ def confirm_signup(request, username, user_pk):
     return render(request, 'confirm_signup.html', {
         "signup": signup,
         "exchange": exchange,
-        'month': datetime.datetime.now().strftime("%b")
+        'month': datetime.datetime.now().strftime("%b"),
+        'log_string': log_string
     })
 
 def upload_sketch(request, assignment_pk, tag, password):
