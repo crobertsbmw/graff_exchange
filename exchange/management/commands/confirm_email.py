@@ -15,7 +15,7 @@ Chase
 '''
 
 message2 = '''{first_name},
-Hey, we're starting the next Exchange this {date}, if you want to join this month, go ahead and click this link and you can confirm your details.
+Hey, the deadline for signing up for the exchange is this {date}, if you want to join this month, go ahead and click this link and you can confirm your details.
 
 {link}
 
@@ -24,11 +24,12 @@ Let me know if you have any questions or concerns.
 Thanks,
 Chase
 '''
+
 def send_confirmation_email():
     users = Exchange.this_month().users.all()
     message = message1.replace('{date}', Exchange.this_month().assignment_date.strftime('%A'))
     for user in users:
-        m = message1.replace('{first_name}', user.name())
+        m = message.replace('{first_name}', user.name())
         m = m.replace('{link}', user.confirm_link())
         print('*****')
         print("sending to ", user.email)
@@ -39,11 +40,11 @@ def send_confirmation_email():
     two_months_ago = datetime.datetime.now() - datetime.timedelta(days=70)
     sketches = Sketch.objects.filter(datetime__gt=two_months_ago)
     user_pks = list(set([s.user_id for s in sketches]))
-    users = User.objects.filter(user_pk__in=user_pks).exclude(user_pk__in=[u.id for u in users])
-    
-    message = message1.replace('{date}', Exchange.this_month().assignment_date.strftime('%A'))
+    users = User.objects.filter(pk__in=user_pks).exclude(pk__in=[u.id for u in users])
+
+    message = message2.replace('{date}', Exchange.this_month().sign_up_date.strftime('%A'))
     for user in users:
-        m = message1.replace('{first_name}', user.name())
+        m = message.replace('{first_name}', user.name())
         m = m.replace('{link}', user.confirm_link())
         print('*****')
         print("sending to ", user.email)

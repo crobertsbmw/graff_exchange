@@ -46,6 +46,7 @@ def confirm_signup(request, username, user_pk):
     return render(request, 'confirm_signup.html', {
         "signup": signup,
         "exchange": exchange,
+        'month': datetime.datetime.now().strftime("%b")
     })
 
 def upload_sketch(request, assignment_pk, tag, password):
