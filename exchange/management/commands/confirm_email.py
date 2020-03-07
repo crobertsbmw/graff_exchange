@@ -45,11 +45,11 @@ def send_confirmation_email():
     message = message2.replace('{date}', Exchange.this_month().sign_up_date.strftime('%A'))
     for user in users:
         m = message.replace('{first_name}', user.name())
-        m = m.replace('{link}', user.confirm_link())
+        m = m.replace('{link}', user.confirm_link()+"?do_double=False")
         print('*****')
         print("sending to ", user.email)
         print(m)
-        email = EmailMessage(datetime.datetime.now().strftime("%b Exchange?"), m, to=[user.email])
+        email = EmailMessage(datetime.datetime.now().strftime("%B Exchange?"), m, to=[user.email])
         email.send()
 
 
