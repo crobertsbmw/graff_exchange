@@ -34,11 +34,11 @@ def confirm_signup(request, username, user_pk):
         signup.do_double = user.do_double
         log_string = "a"
         do_double = request.GET.get("do_double")
-        log_string =+ do_double
+        log_string += do_double
         if do_double:
-            log_string =+ "inside"
+            log_string += "inside"
             signup.do_double = do_double=="true"
-            log_string =+ "|"+signup.do_double
+            log_string += "|"+signup.do_double
         signup.save()
 
     if request.method == 'POST':
