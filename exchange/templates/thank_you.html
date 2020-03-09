@@ -171,22 +171,22 @@ label {
         <div class="uk-grid uk-grid-large uk-child-width-1-4@m" data-uk-grid data-uk-scrollspy="target: > div; delay: 150; cls: uk-animation-slide-bottom-medium">
           <div class="uk-text-center">
             <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-3.svg" data-uk-img alt="Image"> -->
-            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Mar 7, 2020</h4>
-            <p>Sign Up By Saturday</p>
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">{{ exchange.sign_up_date|date:'M j, Y' }}</h4>
+            <p>Sign Up By {{ exchange.sign_up_date|date:'l' }}</p>
           </div>
           <div class="uk-text-center">
            <!--  <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-4.svg" data-uk-img alt="Image"> -->
-            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Mar 9, 2020</h4>
-            <p>Get your assignment by Monday</p>
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">{{ exchange.assignment_date|date:'M j, Y' }}</h4>
+            <p>Get your assignment by {{ exchange.assignment_date|date:'l' }}</p>
           </div>
           <div class="uk-text-center">
             <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-5.svg" data-uk-img alt="Image"> -->
-            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Mar 16, 2020</h4>
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">{{ exchange.due_date|date:'M j, Y' }}</h4>
             <p>One week to upload your sketch.</p>
           </div>
           <div class="uk-text-center">
             <!-- <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="img/marketing-5.svg" data-uk-img alt="Image"> -->
-            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">Mar 23, 2020</h4>
+            <h4 class="uk-margin-small-bottom uk-margin-top uk-margin-remove-adjacent">{{ exchange.results_date|date:'M j, Y' }}</h4>
             <p>One week until reviewing the results.</p>
           </div>
         </div>

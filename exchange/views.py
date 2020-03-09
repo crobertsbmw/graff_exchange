@@ -227,9 +227,11 @@ def signup(request):
         exchange.save()
 
         return render(request, 'thank_you.html', {
-            "email": email
+            "email": email,
+            "exchange": Exchange.latest()
         })
     return render(request, 'signup.html', {
+        "exchange": Exchange.latest()
     })
 
 def december(request):

@@ -4,34 +4,33 @@ import random
 exchange = Exchange.this_month()
 signups = exchange.signups.all() # get our users
 
+
 #sort by style
 handstylers = list(signups.filter(style="handstyle").all().order_by("-user__level"))
 random.shuffle(handstylers)
-
 for a,b in zip(handstylers, handstylers[1:]+handstylers[:1]):
+    if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
+        print("We've already done this", a, b)
+    print(a, b)
     Assignment(
         exchange=exchange,
         user_signup = a,
         recipient_signup = b,
+        user = a.user,
+        recipient = b.user,
         style = "handstyle",
         rematch = False,
     ).save()
-   
-a, b = handstylers[2], handstylers[1]
-Assignment(
-    exchange=exchange,
-    user = a.user,
-    user_signup = a,
-    recipient = b.user,
-    recipient_signup = b,
-    style = "handstyle",
-    rematch = False,
-).save()
+
 
 
 throwers = list(signups.filter(style="throwie").all().order_by("-user__level"))
+random.shuffle(throwers)
 #put all the newbies with eachother. and match the two remaining because they are similar level
 for a,b in zip(throwers, throwers[1:]+throwers[:1]):
+    print(a, b)
+    if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
+        print("We've already done this", a, b)
     Assignment(
         exchange=exchange,
         user = a.user,
@@ -47,10 +46,11 @@ for a,b in zip(throwers, throwers[1:]+throwers[:1]):
 #match the 10's 9's and 8'
 piecers = list(signups.filter(style="piece").filter(user__level__lt=7).order_by("-user__level"))
 random.shuffle(piecers)
-for s in piecers:
-    print(s.user.level, s.user.moniker)
 
 for a,b in zip(piecers, piecers[1:]+piecers[:1]):
+    print(a, b)
+    if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
+        print("We've already done this", a, b)
     Assignment(
         exchange=exchange,
         user = a.user,

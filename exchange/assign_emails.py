@@ -8,7 +8,7 @@ When you've got it done, you can upload your sketch using this link:
 
 {link}
 
-Of course, if you have any questions, or have any trouble getting it uploaded you can email me.
+If you have any questions, or have any trouble getting it uploaded you can email me.
 
 Thanks,
 Chase
@@ -32,11 +32,10 @@ for assignment in assignments:
         m = message_friend
     else:
         m = message
+    m = message
     name = assignment.user_signup.user.first_name
     if not name:
         name = assignment.user_signup.tag
-    if name != "Leighton":
-        continue
     m = m.replace('{first_name}', name)
     m = m.replace('{link}', assignment.upload_link())
     m = m.replace('{tag}', assignment.recipient_signup.tag)
