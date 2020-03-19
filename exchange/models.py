@@ -126,9 +126,9 @@ class Assignment(models.Model):
 
     def upload_link(self):
         try:
-            return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.password+"/"
+            return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.password+"/"
         except:
-            return "https://graffexchange.com/upload/whatever/"
+            return "Exception Thrown"
     
     def review_link(self):
         return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.review_password+"/"

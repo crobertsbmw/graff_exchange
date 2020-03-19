@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', signup, name='signup'),
     url(r'^december/$', december, name='december'),
     url(r'^upload/(?P<assignment_pk>\d+)/(?P<tag>\w+)/(?P<password>\w+)/$', upload_sketch, name='upload_sketch'),
+    url(r'^upload/(?P<assignment_pk>\d+)/(?P<password>\w+)/$', upload_sketch, name='upload_sketch'),
     url(r'^review/(?P<exchange_name>\w+)/(?P<assignment_pk>\d+)/(?P<tag>\w+)/(?P<password>\w+)/$', review_sketches, name='review'),
     url(r'^review/(?P<exchange>\w+)/$', review, name='review'),
     url(r'^review/$', review, name='review'),

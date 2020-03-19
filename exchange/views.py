@@ -1,3 +1,4 @@
+from django.core.mail import EmailMessage
 from PIL import Image
 from django.http import Http404
 import json, random, string, datetime
@@ -12,8 +13,13 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
+confirmation_email = '''Thanks for signing up! Please just click the link below to confirm your email:
 
-#filter
+{link}
+
+Also, if you can please add this address to your contact list to make sure you don't miss future emails.'''
+
+# filter
 g = GeoIP2()
 
 def rand_string():
@@ -23,6 +29,8 @@ def confirm_signup(request, username, user_pk):
     user = get_object_or_404(User, pk=user_pk)
     if user.username.lower() != username.lower():
         raise Http404("User Doesn't Exist")
+    user.email_confirmed = True
+    user.save()
     auth_user(request, user)
 
     exchange = Exchange.latest()
@@ -49,11 +57,9 @@ def confirm_signup(request, username, user_pk):
         'month': datetime.datetime.now().strftime("%B"),
     })
 
-def upload_sketch(request, assignment_pk, tag, password):
+def upload_sketch(request, assignment_pk, password, tag=None):
     print(request.POST)
     assignment = Assignment.objects.get(pk=assignment_pk)
-    if assignment.recipient_signup.tag.lower() != tag.lower():
-        raise Http404("Tag doesn't exist")
     if assignment.password != password:
         raise Http404("Incorrect Password")
     if request.user != assignment.user and not request.user.is_superuser:
@@ -68,7 +74,7 @@ def upload_sketch(request, assignment_pk, tag, password):
             sketch.exchange = Exchange.this_month()
             sketch.save()
             sketch.resize()
-            urls.append(sketch.image.large.url)
+            urls.append(sketch.image.url)
         assignment.completed = True
         assignment.save()
         return JsonResponse({
@@ -163,6 +169,7 @@ def review(request, exchange=None):
     return render(request, 'review.html', {
         "assignments": assignments,
         "exchange": exchange,
+        "latest_exchange": Exchange.latest(),
         "thank_you": thank_you
     })
 
@@ -223,6 +230,8 @@ def signup(request):
         user.save()
         if created:
             auth_user(request, user)
+            send_confirmation_email(user)
+
         exchange.users.add(user)
         exchange.save()
 
@@ -233,6 +242,24 @@ def signup(request):
     return render(request, 'signup.html', {
         "exchange": Exchange.latest()
     })
+
+def send_confirmation_email(user):
+    m = confirmation_email.replace('{link}', str(user.confirm_link()))
+    print(m)
+    email = EmailMessage("Confirm Email", m, to=[user])
+    # email.send()
+
+def stupid_hash(s):
+    s = s.lower()
+    a = s.ljust(12)[:12]
+    a.replace(' ', 'f')
+    a.replace('@', 'h')
+    a = [ord(x) if ord(x)>96 and ord(x)<123 else 110 for x in a]
+    a[1]+=2
+    a[4]+=3
+    a[5]+=8
+    a[8]+=4
+    return "".join(a)
 
 def december(request):
     return render(request, 'december.html', {
