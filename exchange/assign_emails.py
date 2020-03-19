@@ -127,7 +127,7 @@ for assignment in assignments:
     # email.send()
 
 
-#REMATCHES
+#REMATCHES -----------------
 #find all the people that need a grade
 from exchange.models import *
 users = User.objects.filter(level=0)
@@ -138,20 +138,30 @@ for user in users:
 
 #make assignments
 from exchange.models import *
-assignments = Exchange.this_month().assignments.filter(completed=False).order_by("-recipient_signup__user__level")
+assignments = Exchange.this_month().assignments.filter(completed=False, rematch=False).order_by("-recipient_signup__user__level")
 needers = []
-for assignment in assignments:
+for assignment in assignments: #assignment is the original assignment that wasn't completed.
+    rematches = Assignment.objects.filter(recipient_signup=assignment.recipient_signup, rematch=True)
+    if rematches.count() > 0:
+        continue #this user has already been rematched.
     recipient_a = Assignment.objects.get(user_signup=assignment.recipient_signup, style=assignment.style)
     if recipient_a.completed:
         needers.append(assignment.recipient_signup)
         #we need to do a rematch
         print("Needs rematch", assignment.recipient_signup)
 
+
+random.shuffle(needers)
 doublers = []
-doublers_a = Exchange.this_month().assignments.filter(completed=True, user_signup__do_double=True).order_by("-user_signup__user__level")
+doublers_a = Exchange.this_month().assignments.filter(completed=True, user_signup__do_double=True, rematch=False).order_by("-user_signup__user__level")
 for doubler in doublers_a:
+    rematches = Assignment.objects.filter(user_signup=doubler.user_signup, rematch=True)
+    if rematches.count() > 0:
+        print(doubler.user_signup, "already doing a rematch")
+        continue
     doublers.append(doubler.user_signup)
 
+random.shuffle(doublers)
 assignments = []
 for needer in needers:
     best_match = None
@@ -185,16 +195,47 @@ for needer in needers:
         elif doubler.user.level > best_match.user.level:
             continue
         best_match = doubler
-
     else:
         print("apair", best_match, "->", needer)
+        assignments.append(Assignment(
+            exchange=Exchange.this_month(),
+            user = best_match.user,
+            user_signup = best_match,
+            recipient = needer.user,
+            recipient_signup = needer,
+            style = "piece",
+            rematch = True,
+        ))
         doublers.remove(best_match)
 
-#--------------
 
-exchange = Exchange.this_month()
-assignments = Assignment.objects.filter(exchange=exchange, rematch=True)
+#Save the assignments if it looks good.
+[a.save() for a in assignments]
+
+
+#Send the emails --------------
+from django.core.mail import EmailMessage
+message = '''{first_name},
+Thanks for getting your sketch done. Honestly, it's super dope. And even more thanks for being willing to help with the rematch! We're a little behind schedule on this, so I hope 5 days is enough time to get this done. 
+For the reassignment can you write "{tag}"? Once it's done you can upload it here:
+
+{link}
+
+Thanks again for your help. I really appreciate it.
+Best,
+Chase
+'''
+
 for assignment in assignments:
-    print(assignment.user.email, assignment.user.moniker, assignment.recipient.moniker, assignment.upload_link())
-    
-
+    m = message
+    name = assignment.user_signup.user.first_name
+    if not name:
+        name = assignment.user_signup.tag
+    m = m.replace('{first_name}', name.title())
+    m = m.replace('{link}', assignment.upload_link())
+    m = m.replace('{tag}', assignment.recipient_signup.tag)
+    print('*****')
+    print("sending to ", assignment.user_signup.user.email)
+    print(m)
+    email = EmailMessage('Rematch Assignment: '+assignment.recipient_signup.tag, m, to=[assignment.user_signup.user.email])
+    email.send()

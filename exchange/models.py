@@ -37,6 +37,8 @@ class User(AbstractUser):
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
+    email_confirmed = models.BooleanField(default=False)
+
     def name(self):
         if self.first_name:
             return self.first_name

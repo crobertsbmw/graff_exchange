@@ -34,7 +34,6 @@ def confirm_signup(request, username, user_pk):
     auth_user(request, user)
 
     exchange = Exchange.latest()
-
     signup, created = Signup.objects.get_or_create(exchange=exchange, user=user)
     if created:
         signup.tag = user.moniker
@@ -247,7 +246,7 @@ def send_confirmation_email(user):
     m = confirmation_email.replace('{link}', str(user.confirm_link()))
     print(m)
     email = EmailMessage("Confirm Email", m, to=[user])
-    # email.send()
+    email.send()
 
 def stupid_hash(s):
     s = s.lower()
