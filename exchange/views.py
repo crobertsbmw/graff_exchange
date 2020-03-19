@@ -153,7 +153,6 @@ def sortedAssignments(exchange):
     return [x for x in assignments if x.completed]
 
 
-
 def review(request, exchange=None):
     if exchange:
         exchange = get_object_or_404(Exchange, name__iexact=exchange.replace("_", " "))
@@ -245,7 +244,7 @@ def signup(request):
 def send_confirmation_email(user):
     m = confirmation_email.replace('{link}', str(user.confirm_link()))
     print(m)
-    email = EmailMessage("Confirm Email", m, to=[user])
+    email = EmailMessage("Confirm Email", m, to=[user.email])
     email.send()
 
 def stupid_hash(s):
