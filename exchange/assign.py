@@ -28,9 +28,9 @@ throwers = list(signups.filter(style="throwie").all().order_by("-user__level"))
 random.shuffle(throwers)
 #put all the newbies with eachother. and match the two remaining because they are similar level
 for a,b in zip(throwers, throwers[1:]+throwers[:1]):
-    print(a, b)
     if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
         print("We've already done this", a, b)
+    print(a, b)
     Assignment(
         exchange=exchange,
         user = a.user,
@@ -45,13 +45,13 @@ for a,b in zip(throwers, throwers[1:]+throwers[:1]):
 
 #match the 10's 9's and 8'
 
-piecers = list(signups.filter(style="piece").filter(user__level__lt=7).order_by("-user__level"))
+piecers = list(signups.filter(style="piece").filter(user__level__gte=7).order_by("-user__level"))
 random.shuffle(piecers)
 
 for a,b in zip(piecers, piecers[1:]+piecers[:1]):
-    print(a, b)
     if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
         print("We've already done this", a, b)
+    print(a, b)
     a = Assignment(
         exchange=exchange,
         user = a.user,

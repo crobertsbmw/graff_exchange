@@ -26,28 +26,29 @@ Chase
 '''
 
 def send_confirmation_email():
-    users = Exchange.this_month().users.all()
-    message = message1.replace('{date}', Exchange.this_month().assignment_date.strftime('%A'))
-    for user in users:
-        m = message.replace('{first_name}', user.name())
-        m = m.replace('{link}', user.confirm_link())
-        print('*****')
-        print("sending to ", user.email)
-        print(m)
-        email = EmailMessage('Confirm Graff Exchange Signup', m, to=[user.email])
-        email.send()
+#     users = Exchange.this_month().users.all()
+#     message = message1.replace('{date}', Exchange.this_month().assignment_date.strftime('%A'))
+#     for user in users:
+#         m = message.replace('{first_name}', user.name())
+#         m = m.replace('{link}', user.confirm_link())
+#         print('*****')
+#         print("sending to ", user.email)
+#         print(m)
+#         email = EmailMessage('Confirm Graff Exchange Signup', m, to=[user.email])
+#         email.send()
 
-    two_months_ago = datetime.datetime.now() - datetime.timedelta(days=70)
+    signups = Signup.objects.filter(exchange=Exchange.this_month())
+    two_months_ago = datetime.datetime.now() - datetime.timedelta(days=90)
     sketches = Sketch.objects.filter(datetime__gt=two_months_ago)
     user_pks = list(set([s.user_id for s in sketches]))
-    users = User.objects.filter(pk__in=user_pks).exclude(pk__in=[u.id for u in users])
-
+    users = User.objects.filter(pk__in=user_pks).exclude(pk__in=[s.user_id for s in signups])
     message = message2.replace('{date}', Exchange.this_month().sign_up_date.strftime('%A'))
+    
     for user in users:
         m = message.replace('{first_name}', user.name())
         m = m.replace('{link}', user.confirm_link()+"?do_double=False")
         print('*****')
-        print("sending to ", user.email)
+        print("sending 2 ", user.email)
         print(m)
         email = EmailMessage(datetime.datetime.now().strftime("%B Exchange?"), m, to=[user.email])
         email.send()

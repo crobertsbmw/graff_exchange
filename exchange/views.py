@@ -145,7 +145,10 @@ def sortedAssignments(exchange):
             [assignment_group.append(rematch) for rematch in rematches]
             assignment_group.append(assignment)
             #get the next assignment
-            assignment = Assignment.objects.get(user_signup=assignment.recipient_signup, exchange=exchange, rematch=False, style=assignment.style)
+            try:
+                assignment = Assignment.objects.get(user_signup=assignment.recipient_signup, exchange=exchange, rematch=False, style=assignment.style)
+            except Assignment.DoesNotExist as e:
+                break
         #close out the group
         assignment_groups.append(assignment_group)
     chain = itertools.chain(*assignment_groups)

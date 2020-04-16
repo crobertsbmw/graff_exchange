@@ -4,24 +4,43 @@ assignments = Exchange.this_month().assignments.all()
 
 
 #This code assumes everyone did a sketch. We should have 3 different emails for people who didn't do sketches.
-message = '''Thanks everyone for participating in this, especially if this was your first time and you were maybe hesitant. This month I thought went really well. We only had two or three pieces not get finished during the first week, which was awesome (the first month we did this about 50% didn't follow through).
+message = '''Thanks everyone for participating! I kind of screwed some things up, so we had a rough start, but thanks to everyone for being patient with me. There are still a few sketches that I haven't gotten back, so I'll add those in as I get them. Also, I will email them directly to the recipient just to be sure they see it.
 
-Here's a link to review the piece that was done for you, and a couple survey questions:
+Here's a link to review the piece that was done for you:
 
 {link}
 
-After you do the survey it should redirect you so you can see all the pieces that were done.
+And after you answer the questions, it should redirect you so you can see all the pieces.
 
-Thanks again, and of course let me know if you have any suggests or questions.
+Thanks again!
+-Chase
+'''
+
+message_not_completed = '''Thanks everyone for participating! I kind of screwed some things up, so we had a rough start, but thanks to everyone for being patient with me. There are still a few sketches that I haven't gotten back, so I'll add those in as I get them. Also, I will email them directly to the recipient just to be sure they see it.
+
+Here's a link to review all the pieces.
+
+{link}
+
+Thanks again!
 -Chase
 '''
 
 
-for assignment in assignments:
-    m = message.replace('{link}', assignment.review_link())
-    print('*****')
-    print("sending to ", assignment.recipient_signup.user.email)
+# we need to redo this for people who get 2 back, etc.
+
+signups =  Exchange.this_month().signups.all()
+for signup in signups:
+    assignments = signup.favors.filter(completed=True)
+    if assignments.count() > 0:
+        links = [a.review_link() for a in assignments]
+        m = message.replace('{link}', "\n".join(links))
+    else:
+        link = "https://graffexchange.com/review/"+Exchange.this_month().name.replace(" ", "_")+"/"
+        m = message_not_completed.replace('{link}', link)
+    print("sending to ", signup.user.email)
     print(m)
-    email = EmailMessage('Exchange RESULTS!', m, to=[assignment.recipient_signup.user.email])
+    email = EmailMessage('Exchange RESULTS!', m, to=[signup.user.email])
     email.send()
+
 

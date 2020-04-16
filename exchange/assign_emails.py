@@ -3,35 +3,18 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Thanks again for signing up for the exchange! You're going to be writing "{tag}" as a {style}. I'm giving everyone one week to get it done. Then I'll assign the rematches, and after I get all of those back then I'll notify you of the results.
+Thanks again for signing up for the exchange! You're going to be writing "{tag}" as a {style}. We're all sitting around at home doing nothing, so I'm only giving 5 days instead of a week to do this. Which makes the official deadline will be the 20th. Let me know if you need more time.
 When you've got it done, you can upload your sketch using this link:
 
 {link}
 
-If you have any questions, or have any trouble getting it uploaded you can email me.
+Let me know if you have any questions, or have any trouble getting it uploaded.
 
 Thanks,
 Chase
 '''
-message_friend = '''{first_name},
-Thanks again for signing up for the exchange! I appreciate that you haven't given up on this yet. You're going to be writing "{tag}" as a {style}. I'm trying to match the experienced people together so hopefully you get something back that your happy with. 
-I'm giving everyone one week to get it done. Then I'll assign the rematches, and after I get all of those back then I'll notify you of the results.
-When you've got it done, you can upload your sketch using this link:
-
-{link}
-
-Of course, if you have any questions, or have any trouble getting it uploaded you can email me.
-
-Thanks for making these awesome!
-Best,
-Chase
-'''
 
 for assignment in assignments:
-    if assignment.user_signup.user.level > 6:
-        m = message_friend
-    else:
-        m = message
     m = message
     name = assignment.user_signup.user.first_name
     if not name:
@@ -43,7 +26,7 @@ for assignment in assignments:
     print('*****')
     print("sending to ", assignment.user_signup.user.email)
     print(m)
-    email = EmailMessage('Graff Exchange Assignment', m, to=[assignment.user_signup.user.email])
+    email = EmailMessage('April Graff Exchange Assignment', m, to=[assignment.user_signup.user.email])
     email.send()
 
 
@@ -134,7 +117,7 @@ users = User.objects.filter(level=0)
 
 for user in users:
     if user.sketches.all().count() > 0:
-        print(user.email, user.moniker, user.pk)
+        print(user.email, user.moniker, user.pk, user.sketches.all()[0].image.url)
 
 #make assignments
 from exchange.models import *

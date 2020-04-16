@@ -1,3 +1,4 @@
+Update the review link to not use the tag.
 After signing up, confirm your email.
 See what upcoming exchanges there are and be able to edit your details.
 See what uploads you have. Be able to rotate and delete images.
@@ -9,4 +10,10 @@ Make sure the upload stuff works the way it's supposed to.
 Make a dashboard for people to see that they are confirmed for the exchange.
 Update the upload so that we don't rely on the tag being one word...
 Put a level field on each of the Assignments.
+
+exercise
+mental engagement
+food
+tactile
+physical contact
 
