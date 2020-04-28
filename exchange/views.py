@@ -174,7 +174,7 @@ def review(request, exchange=None):
         "thank_you": thank_you
     })
 
-def review_sketches(request, exchange_name, assignment_pk, tag=None, password):
+def review_sketches(request, exchange_name, assignment_pk, password, tag=None):
     exchange = get_object_or_404(Exchange, name__iexact=exchange_name.replace("_", " "))    
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     if exchange != assignment.exchange:
