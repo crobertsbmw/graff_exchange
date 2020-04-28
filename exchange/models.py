@@ -127,13 +127,11 @@ class Assignment(models.Model):
     posted_to_reddit = models.BooleanField(default=False)
 
     def upload_link(self):
-        try:
-            return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.password+"/"
-        except:
-            return "Exception Thrown"
+        return "https://graffexchange.com/upload/"+str(self.pk)+"/"+self.password+"/"
+
     
     def review_link(self):
-        return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.recipient_signup.tag.lower()+"/"+self.review_password+"/"
+        return "https://graffexchange.com/review/"+self.exchange.name.replace(" ", "_")+"/"+str(self.pk)+"/"+self.review_password+"/"
 
 def month_year_string():
     return datetime.datetime.now().strftime("%b %Y")

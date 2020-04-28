@@ -38,13 +38,13 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Just a reminder that deadline for writing "{tag}" is tomorrow (Monday). If you are working on it, and need more time, just let me know.
+Just a reminder that deadline for writing "{tag}" is this Monday. If you are working on it, and need more time, just let me know.
 
 Thanks,
 Chase
 '''
 message_rematch = '''{first_name},
-Just a reminder that deadline for writing "{tag}" is tomorrow (Monday). If you are working on it, and need more time, just let me know. Then, we'll do rematches if there are any (last month almost everyone followed through, so there was only like one or two rematches which was awesome).
+Just a reminder that deadline for writing "{tag}" is this Monday. If you are working on it, and need more time, just let me know.
 
 Thanks,
 Chase
@@ -54,9 +54,6 @@ for assignment in assignments:
     if assignment.completed:
         continue
     print('*****')
-    if assignment.user_signup.user.email == 'diedre.m.atkinson@gmail.com':
-        print("skipping")
-        continue
     if assignment.user_signup.do_double:
         m = message_rematch
     else:
@@ -68,7 +65,7 @@ for assignment in assignments:
     m = m.replace('{tag}', assignment.recipient_signup.tag)
     print("sending to ", assignment.user_signup.user.email)
     print(m)
-    email = EmailMessage('Graffiti Exchange Reminder', m, to=[assignment.user_signup.user.email])
+    email = EmailMessage('April Exchange Reminder', m, to=[assignment.user_signup.user.email])
     email.send()
 
 
@@ -145,6 +142,14 @@ for doubler in doublers_a:
     doublers.append(doubler.user_signup)
 
 random.shuffle(doublers)
+
+ddoublers = doublers[:]
+nneeders = needers[:]
+
+doublers = ddoublers[:]
+needers = nneeders[:]
+random.shuffle(needers)
+random.shuffle(doublers)
 assignments = []
 for needer in needers:
     best_match = None
@@ -199,12 +204,12 @@ for needer in needers:
 #Send the emails --------------
 from django.core.mail import EmailMessage
 message = '''{first_name},
-Thanks for getting your sketch done. Honestly, it's super dope. And even more thanks for being willing to help with the rematch! We're a little behind schedule on this, so I hope 5 days is enough time to get this done. 
-For the reassignment can you write "{tag}"? Once it's done you can upload it here:
+Thanks for getting your sketch done on time, and even more thanks for being willing to help with the rematch! I'm hoping to get the rematches collected by Sunday (5 days from now), because I know everyone's anxious to get the results back.
+For the reassignment can I have you write "{tag}"? Once it's done you can upload it here:
 
 {link}
 
-Thanks again for your help. I really appreciate it.
+Thanks again for your help! Without the rematch, this thing would fall apart.
 Best,
 Chase
 '''
