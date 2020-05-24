@@ -1,5 +1,4 @@
-Update the review link to not use the tag.
-After signing up, confirm your email.
+Strip out the mefs/mephs so that it's fixed by the code.
 See what upcoming exchanges there are and be able to edit your details.
 See what uploads you have. Be able to rotate and delete images.
 Be able to view sketches done for you.

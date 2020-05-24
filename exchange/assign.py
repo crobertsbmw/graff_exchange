@@ -6,7 +6,7 @@ signups = exchange.signups.all() # get our users
 
 
 #sort by style
-handstylers = list(signups.filter(style="handstyle").all().order_by("-user__level"))
+handstylers = list(signups.filter(style="handstyle").order_by("-user__level"))
 random.shuffle(handstylers)
 for a,b in zip(handstylers, handstylers[1:]+handstylers[:1]):
     if Assignment.objects.filter(user_signup__user = a.user, recipient_signup__user = b.user).count() > 0:
@@ -45,7 +45,7 @@ for a,b in zip(throwers, throwers[1:]+throwers[:1]):
 
 #match the 10's 9's and 8'
 
-piecers = list(signups.filter(style="piece").filter(user__level__gte=7).order_by("-user__level"))
+piecers = list(signups.filter(style="piece").filter(user__level__lt=7).order_by("-user__level"))
 random.shuffle(piecers)
 
 for a,b in zip(piecers, piecers[1:]+piecers[:1]):

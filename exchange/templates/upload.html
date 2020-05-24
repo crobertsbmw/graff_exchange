@@ -197,7 +197,9 @@ var bar = document.getElementById('js-progressbar');
         "csrfmiddlewaretoken": Cookies.get('csrftoken'),
         "time": document.getElementById("time_select").value
       },
-
+      error: function () {
+          console.log('error', arguments);
+      },
       loadStart: function (e) {
           console.log('loadStart', arguments);
           bar.removeAttribute('hidden');
@@ -207,14 +209,12 @@ var bar = document.getElementById('js-progressbar');
 
       progress: function (e) {
           console.log('progress', arguments);
-
           bar.max = e.total;
           bar.value = e.loaded;
       },
 
       loadEnd: function (e) {
           console.log('loadEnd', arguments);
-
           bar.max = e.total;
           bar.value = e.loaded;
       },

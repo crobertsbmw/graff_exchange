@@ -25,6 +25,12 @@ g = GeoIP2()
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
 
+def dashboard(request):
+    user = request.user
+    return render(request, 'dashboard.html', {
+        "user": user,
+    })
+
 def confirm_signup(request, username, user_pk):
     user = get_object_or_404(User, pk=user_pk)
     if user.username.lower() != username.lower():
@@ -55,6 +61,7 @@ def confirm_signup(request, username, user_pk):
         "exchange": exchange,
         'month': datetime.datetime.now().strftime("%B"),
     })
+
 
 def upload_sketch(request, assignment_pk, password, tag=None):
     print(request.POST)
@@ -244,23 +251,14 @@ def signup(request):
         "exchange": Exchange.latest()
     })
 
+
+
 def send_confirmation_email(user):
     m = confirmation_email.replace('{link}', str(user.confirm_link()))
     print(m)
     email = EmailMessage("Confirm Email", m, to=[user.email])
     email.send()
 
-def stupid_hash(s):
-    s = s.lower()
-    a = s.ljust(12)[:12]
-    a.replace(' ', 'f')
-    a.replace('@', 'h')
-    a = [ord(x) if ord(x)>96 and ord(x)<123 else 110 for x in a]
-    a[1]+=2
-    a[4]+=3
-    a[5]+=8
-    a[8]+=4
-    return "".join(a)
 
 def december(request):
     return render(request, 'december.html', {

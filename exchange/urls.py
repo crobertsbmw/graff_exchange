@@ -1,10 +1,11 @@
 from django.conf.urls import url
 from django.urls import path
 from django.views.generic import TemplateView
-from exchange.views import signup, december, upload_sketch, review, review_sketches, rematch_guide, confirm_signup
+from exchange.views import dashboard, signup, december, upload_sketch, review, review_sketches, rematch_guide, confirm_signup
 
 urlpatterns = [
     url(r'^$', signup, name='signup'),
+    url(r'^dashboard/$', dashboard, name='dashboard'),
     url(r'^december/$', december, name='december'),
     url(r'^upload/(?P<assignment_pk>\d+)/(?P<tag>\w+)/(?P<password>\w+)/$', upload_sketch, name='upload_sketch'),
     url(r'^upload/(?P<assignment_pk>\d+)/(?P<password>\w+)/$', upload_sketch, name='upload_sketch'),

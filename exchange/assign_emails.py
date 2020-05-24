@@ -3,7 +3,7 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Thanks again for signing up for the exchange! You're going to be writing "{tag}" as a {style}. We're all sitting around at home doing nothing, so I'm only giving 5 days instead of a week to do this. Which makes the official deadline will be the 20th. Let me know if you need more time.
+Thanks again for signing up for the exchange! You're going to be writing "{tag}" as a {style}. The deadline to have it done is May 19th, one week from now.
 When you've got it done, you can upload your sketch using this link:
 
 {link}
@@ -26,7 +26,7 @@ for assignment in assignments:
     print('*****')
     print("sending to ", assignment.user_signup.user.email)
     print(m)
-    email = EmailMessage('April Graff Exchange Assignment', m, to=[assignment.user_signup.user.email])
+    email = EmailMessage('May Exchange Assignment', m, to=[assignment.user_signup.user.email])
     email.send()
 
 
@@ -38,13 +38,14 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Just a reminder that deadline for writing "{tag}" is this Monday. If you are working on it, and need more time, just let me know.
+Just a quick reminder that deadline for writing "{tag}" is this Monday. Let me know if you have any questions.
 
 Thanks,
 Chase
 '''
+
 message_rematch = '''{first_name},
-Just a reminder that deadline for writing "{tag}" is this Monday. If you are working on it, and need more time, just let me know.
+Just a quick reminder that deadline for writing "{tag}" is this Monday. Let me know if you have any questions.
 
 Thanks,
 Chase

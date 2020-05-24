@@ -150,6 +150,13 @@ class Exchange(models.Model):
     results_date = models.DateField(null=True, blank=True)
 
 
+    def last_month():
+        d = datetime.datetime.now() - datetime.timedelta(days=28)
+        if d.month == datetime.datetime.now().month:
+            d = datetime.datetime.now() - datetime.timedelta(days=32)
+        name = d.strftime("%b %Y")
+        return Exchange.objects.get(name=name)
+
     def this_month():
         d = datetime.datetime.now()
         name = d.strftime("%b %Y")
