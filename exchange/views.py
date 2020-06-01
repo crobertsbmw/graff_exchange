@@ -77,7 +77,7 @@ def upload_sketch(request, assignment_pk, password, tag=None):
         assignment.time_spent = time
         for f in files:
             sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
-            sketch.exchange = Exchange.this_month()
+            sketch.exchange = assignment.exchange
             sketch.save()
             sketch.resize()
             urls.append(sketch.image.url)
@@ -106,7 +106,7 @@ def upload_old(request, assignment_pk, password, tag=None):
         assignment.time_spent = time
         for f in files:
             sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
-            sketch.exchange = Exchange.this_month()
+            sketch.exchange = assignment.exchange
             sketch.save()
             sketch.resize()
             urls.append(sketch.image.url)
