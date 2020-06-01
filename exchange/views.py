@@ -92,6 +92,35 @@ def upload_sketch(request, assignment_pk, password, tag=None):
         "tag": assignment.recipient_signup.tag,
     })
 
+def upload_old(request, assignment_pk, password, tag=None):
+    print(request.POST)
+    assignment = Assignment.objects.get(pk=assignment_pk)
+    if assignment.password != password:
+        raise Http404("Incorrect Password")
+    if request.user != assignment.user and not request.user.is_superuser:
+        auth_user(request, assignment.user)
+    if request.method == 'POST':
+        time = request.POST.get("time")
+        files = request.FILES.getlist('sketches')
+        urls = []
+        assignment.time_spent = time
+        for f in files:
+            sketch = Sketch(image=f, user=assignment.user, assignment=assignment)
+            sketch.exchange = Exchange.this_month()
+            sketch.save()
+            sketch.resize()
+            urls.append(sketch.image.url)
+        assignment.completed = True
+        assignment.save()
+        return JsonResponse({
+            "success":True,
+            "images": urls,
+        }, content_type="application/json")
+    return render(request, 'upload_old.html', {
+        "sketches": assignment.sketches.all(),
+        "tag": assignment.recipient_signup.tag,
+    })
+
 
 def auth_user(request, user):
     user.backend = 'django.contrib.auth.backends.ModelBackend'

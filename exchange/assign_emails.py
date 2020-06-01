@@ -132,7 +132,6 @@ for assignment in assignments: #assignment is the original assignment that wasn'
         print("Needs rematch", assignment.recipient_signup)
 
 
-random.shuffle(needers)
 doublers = []
 doublers_a = Exchange.this_month().assignments.filter(completed=True, user_signup__do_double=True, rematch=False).order_by("-user_signup__user__level")
 for doubler in doublers_a:
@@ -142,75 +141,110 @@ for doubler in doublers_a:
         continue
     doublers.append(doubler.user_signup)
 
-random.shuffle(doublers)
 
 ddoublers = doublers[:]
 nneeders = needers[:]
 
+
 doublers = ddoublers[:]
 needers = nneeders[:]
-random.shuffle(needers)
-random.shuffle(doublers)
 assignments = []
 for needer in needers:
-    best_match = None
     for doubler in doublers:
         if doubler == needer:
             continue
-        elif Assignment.objects.filter(user_signup__user=doubler.user, recipient_signup__user=needer.user).count() > 0:
+        #we've already done this assignment
+        if Assignment.objects.filter(user_signup__user=doubler.user, recipient_signup__user=needer.user).count() > 0:
             continue
-        elif Exchange.this_month().assignments.filter(user_signup__user=needer.user, recipient_signup__user=doubler.user).count() > 0:
+        #The needer drew out the doubler. 
+        if Exchange.this_month().assignments.filter(user_signup__user=needer.user, recipient_signup__user=doubler.user).count() > 0:
             continue
-        elif doubler.user.level == needer.user.level:
-            print("pair", doubler, "->", needer)
-            assignments.append(Assignment(
-                exchange=Exchange.this_month(),
-                user = doubler.user,
-                user_signup = doubler,
-                recipient = needer.user,
-                recipient_signup = needer,
-                style = "piece",
-                rematch = True,
-            ))
-            doublers.remove(doubler)
-            break
-        if not best_match:
-            best_match = doubler
-        if best_match.user.level < needer.user.level and doubler.user.level > best_match.user.level:
-            best_match = doubler
-            continue
-        if doubler.user.level < needer.user.level:
-            continue
-        elif doubler.user.level > best_match.user.level:
-            continue
-        best_match = doubler
-    else:
-        print("apair", best_match, "->", needer)
+        print("pair", doubler, "->", needer)
         assignments.append(Assignment(
             exchange=Exchange.this_month(),
-            user = best_match.user,
-            user_signup = best_match,
+            user = doubler.user,
+            user_signup = doubler,
             recipient = needer.user,
             recipient_signup = needer,
             style = "piece",
             rematch = True,
         ))
-        doublers.remove(best_match)
-
+        doublers.remove(doubler)
+        break
 
 #Save the assignments if it looks good.
 [a.save() for a in assignments]
 
 
+# doublers = ddoublers[:]
+# needers = nneeders[:]
+# random.shuffle(needers)
+# random.shuffle(doublers)
+# assignments = []
+
+# for needer in needers:
+#     best_match = None
+#     for doubler in doublers:
+#         if doubler == needer:
+#             continue
+#         #we've already done this assignment
+#         elif Assignment.objects.filter(user_signup__user=doubler.user, recipient_signup__user=needer.user).count() > 0:
+#             continue
+#         #The needer drew out the doubler. 
+#         elif Exchange.this_month().assignments.filter(user_signup__user=needer.user, recipient_signup__user=doubler.user).count() > 0:
+#             continue
+#         #perfect level match.
+#         elif doubler.user.level == needer.user.level:
+#             print("pair", doubler, "->", needer)
+#             assignments.append(Assignment(
+#                 exchange=Exchange.this_month(),
+#                 user = doubler.user,
+#                 user_signup = doubler,
+#                 recipient = needer.user,
+#                 recipient_signup = needer,
+#                 style = "piece",
+#                 rematch = True,
+#             ))
+#             doublers.remove(doubler)
+#             break
+#         if not best_match:
+#             best_match = doubler
+#         if best_match.user.level < needer.user.level and doubler.user.level > best_match.user.level:
+#             best_match = doubler
+#             continue
+#         if doubler.user.level < needer.user.level:
+#             continue
+#         elif doubler.user.level > best_match.user.level:
+#             continue
+#         best_match = doubler
+#     else:
+#         print("apair", best_match, "->", needer)
+#         assignments.append(Assignment(
+#             exchange=Exchange.this_month(),
+#             user = best_match.user,
+#             user_signup = best_match,
+#             recipient = needer.user,
+#             recipient_signup = needer,
+#             style = "piece",
+#             rematch = True,
+#         ))
+#         doublers.remove(best_match)
+
+
+# #Save the assignments if it looks good.
+# [a.save() for a in assignments]
+
+
 #Send the emails --------------
 from django.core.mail import EmailMessage
 message = '''{first_name},
-Thanks for getting your sketch done on time, and even more thanks for being willing to help with the rematch! I'm hoping to get the rematches collected by Sunday (5 days from now), because I know everyone's anxious to get the results back.
-For the reassignment can I have you write "{tag}"? Once it's done you can upload it here:
+Thanks for getting your sketch done, and even more thanks for being willing to help with the rematch! Is this Sunday (4 days) enough time to get the rematch assignment done?
+For the reassignment I'm going to have you write "{tag}". Once it's done you can upload it here:
 
 {link}
 
-Thanks again for your help! Without the rematch, this thing would fall apart.
+I also made a couple tweaks to the uploader, before the file had to be less than 5mb, but I increased that limit to 10mb, so if you had trouble with it before, try it again now.
+Thanks again for your help!
 Best,
 Chase
 '''
