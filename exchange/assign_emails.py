@@ -3,7 +3,7 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Thanks again for signing up for the exchange! You're going to be writing "{tag}" as a {style}. The deadline to have it done is May 19th, one week from now.
+Thanks again for signing up for the June exchange! You're going to be writing "{tag}" as a {style}. The deadline for this first sketch is June 24th, and then I'll assign rematches if needed.
 When you've got it done, you can upload your sketch using this link:
 
 {link}
@@ -26,7 +26,7 @@ for assignment in assignments:
     print('*****')
     print("sending to ", assignment.user_signup.user.email)
     print(m)
-    email = EmailMessage('May Exchange Assignment', m, to=[assignment.user_signup.user.email])
+    email = EmailMessage('June Exchange Assignment', m, to=[assignment.user_signup.user.email])
     email.send()
 
 
@@ -38,14 +38,14 @@ from exchange.models import *
 assignments = Exchange.this_month().assignments.all()
 
 message = '''{first_name},
-Just a quick reminder that deadline for writing "{tag}" is this Monday. Let me know if you have any questions.
+Quick reminder that the deadline for writing "{tag}" is Tomorrow (Wednesday). Let me know if you have any questions.
 
 Thanks,
 Chase
 '''
 
 message_rematch = '''{first_name},
-Just a quick reminder that deadline for writing "{tag}" is this Monday. Let me know if you have any questions.
+Just a quick reminder that deadline for writing "{tag}" is Tomorrow, and then I'll send out the rematches Thursday. Thanks for your help!
 
 Thanks,
 Chase
@@ -66,7 +66,7 @@ for assignment in assignments:
     m = m.replace('{tag}', assignment.recipient_signup.tag)
     print("sending to ", assignment.user_signup.user.email)
     print(m)
-    email = EmailMessage('April Exchange Reminder', m, to=[assignment.user_signup.user.email])
+    email = EmailMessage('Pieces due Tomorrow', m, to=[assignment.user_signup.user.email])
     email.send()
 
 
@@ -238,12 +238,11 @@ for needer in needers:
 #Send the emails --------------
 from django.core.mail import EmailMessage
 message = '''{first_name},
-Thanks for getting your sketch done, and even more thanks for being willing to help with the rematch! Is this Sunday (4 days) enough time to get the rematch assignment done?
+Thanks for getting your sketch done on time, and double thanks for being signing up for the rematch! Is Monday (29th) enough time to get it done?
 For the reassignment I'm going to have you write "{tag}". Once it's done you can upload it here:
 
 {link}
 
-I also made a couple tweaks to the uploader, before the file had to be less than 5mb, but I increased that limit to 10mb, so if you had trouble with it before, try it again now.
 Thanks again for your help!
 Best,
 Chase

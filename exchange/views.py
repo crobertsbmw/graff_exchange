@@ -27,8 +27,32 @@ def rand_string():
 
 def dashboard(request):
     user = request.user
+    exchange = Exchange.upcoming()
+    signup = None
+
+    if exchange:
+        signup = exchange.signups.filter(user=user)
+    
+    active_exchange = Exchange.current()
+    if active_exchange:
+        print("Got active Exchange")
+        
+        active_signup = active_exchange.signups.filter(user=user)[0]
+        
+
+        active_assignments = Assignment.objects.filter(user_signup=active_signup)
+        print("active ass", active_assignments)
+
+
+    assignments = Assignment.objects.filter(user=user)
     return render(request, 'dashboard.html', {
         "user": user,
+        "signup": signup,
+        "exchange": exchange,
+        "assignments": assignments,
+        "active_exchange": active_exchange,
+        "active_signup": active_signup,
+        "active_assignments": active_assignments,
     })
 
 def confirm_signup(request, username, user_pk):
@@ -277,7 +301,8 @@ def signup(request):
             "exchange": Exchange.latest()
         })
     return render(request, 'signup.html', {
-        "exchange": Exchange.latest()
+        "exchange": Exchange.latest(),
+        "completed_exchanges": Exchange.objects.filter(completed=True)
     })
 
 

@@ -139,6 +139,7 @@ def month_year_string():
 class Exchange(models.Model):
     def __str__(self):
         return self.name
+
     users = models.ManyToManyField(User, blank=True)
     name = models.CharField(max_length=255, default=month_year_string)
     start_date = models.DateTimeField(null=True, blank=True)
@@ -148,7 +149,8 @@ class Exchange(models.Model):
     due_date = models.DateField(null=True, blank=True)
     rematch_due_date = models.DateField(null=True, blank=True)
     results_date = models.DateField(null=True, blank=True)
-
+    def review_url(self):
+        return "/review/"+self.name.replace(" ", "_")
 
     def last_month():
         d = datetime.datetime.now() - datetime.timedelta(days=28)
@@ -161,6 +163,19 @@ class Exchange(models.Model):
         d = datetime.datetime.now()
         name = d.strftime("%b %Y")
         return Exchange.objects.get(name=name)
+
+    def current():
+        exchanges = Exchange.objects.filter(sign_up_date__lte=datetime.datetime.now(), results_date__gte=datetime.datetime.now())
+        if exchanges.count() > 0:
+            return exchanges[0]
+        return None
+
     def latest():
         return Exchange.objects.all().order_by("-pk")[0]
+
+    def upcoming():
+        try:
+            return Exchange.objects.filter(sign_up_date__gte=datetime.datetime.now()).order_by("-pk")[0]
+        except:
+            return None
 

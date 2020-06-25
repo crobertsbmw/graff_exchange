@@ -103,7 +103,7 @@ for user in users:
 
 #SEND EMAILS TO PEOPLE
 message = '''{first_name},
-Thanks for signing up for the graffiti exchange! I just need to confirm your email address. If you can just click this link then you should be good to go:
+Thanks for signing up for the June exchange! I just need to confirm your email address. If you can just click this link then you should be good to go:
 
 {link}
 

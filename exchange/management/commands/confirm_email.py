@@ -15,13 +15,13 @@ Chase
 '''
 
 message2 = '''{first_name},
-Hey, the deadline for signing up for the exchange is this {date}, if you want to join this month, go ahead and click this link and you can confirm your details.
+I just set the dates for the June exchange. Again, we are starting a little late this month, and the deadline for signing up is going to be this {date}, if you want to participate this month, click the link and can confirm your details.
 
 {link}
 
-Let me know if you have any questions or concerns.
+And, of course, let me know if you have any questions.
 
-Thanks,
+Best,
 Chase
 '''
 
@@ -38,7 +38,7 @@ def send_confirmation_email():
 #         email.send()
 
     signups = Signup.objects.filter(exchange=Exchange.this_month())
-    two_months_ago = datetime.datetime.now() - datetime.timedelta(days=90)
+    two_months_ago = datetime.datetime.now() - datetime.timedelta(days=170)
     sketches = Sketch.objects.filter(datetime__gt=two_months_ago)
     user_pks = list(set([s.user_id for s in sketches]))
     users = User.objects.filter(pk__in=user_pks).exclude(pk__in=[s.user_id for s in signups])
@@ -46,7 +46,7 @@ def send_confirmation_email():
     
     for user in users:
         m = message.replace('{first_name}', user.name())
-        m = m.replace('{link}', user.confirm_link()+"?do_double=False")
+        m = m.replace('{link}', user.confirm_link()+"?do_double=True")
         print('*****')
         print("sending 2 ", user.email)
         print(m)
