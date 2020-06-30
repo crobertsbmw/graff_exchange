@@ -25,8 +25,15 @@ g = GeoIP2()
 def rand_string():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(12))
 
-def dashboard(request):
+
+def dashboard(request, user_pk=None):
+    # PHASE_1 - Exchange hasn't started yet
+    # PHASE_2 - Exchange has started
+
     user = request.user
+    if user.is_staff and user_pk:
+        user = User.objects.get(pk=user_pk)
+        
     exchange = Exchange.upcoming()
     signup = None
 
@@ -43,16 +50,17 @@ def dashboard(request):
         active_assignments = Assignment.objects.filter(user_signup=active_signup)
         print("active ass", active_assignments)
 
-
-    assignments = Assignment.objects.filter(user=user)
+        waiting = 
+    past_assignments = Assignment.objects.filter(user=user)
     return render(request, 'dashboard.html', {
         "user": user,
         "signup": signup,
         "exchange": exchange,
-        "assignments": assignments,
+        "past_assignments": past_assignments,
         "active_exchange": active_exchange,
         "active_signup": active_signup,
         "active_assignments": active_assignments,
+        "waiting": waiting,
     })
 
 def confirm_signup(request, username, user_pk):

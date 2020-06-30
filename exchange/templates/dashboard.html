@@ -137,9 +137,11 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
       <div class="uk-container">
         <h1>{{user.username}}</h1>
         
-        <h3></h3>
+    
+        <!-- Exchange is going, and these are the Sketches uploaded by user -->
         {% if active_exchange and active_signup %}
             {% for assignment in active_assignments %}
+              <h3>{{assignment.style}} for "{{assignment.recipient_signup.tag}}"</h3>
               {% if assignment.completed %}
                 {% for sketch in assignment.sketches.all %}
                   <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match" uk-grid="masonry: true" id="sketch_container">
@@ -153,18 +155,25 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
                   </div>
                 {% endfor %}
               {% else %} <!--Assignment Not Completed-->
-                <a class="uk-button uk-button-primary" href="/upload/{{user.username}}/{{user.pk}}/">Fix this link to be correct. Upload sketch for "{{ assignment.recipient_signup.tag }}" {% if assignment.style %}({{assignment.style}}) {% endif %}</a>
+              {% if assignment.rematch %}
+                <p>Rematch sketches are due by {{ active_exchange.rematch_due_date|date:'M j (l)' }}.</p>
+              {% else %}
+                <p>Sketches are due by {{ active_exchange.due_date|date:'M j (l)' }}.</p>
+              {% endif %}
+                <a class="uk-button uk-button-primary" href="{{assignment.upload_link}}">Fix this link to be correct. Upload sketch for "{{ assignment.recipient_signup.tag }}" {% if assignment.style %}({{assignment.style}}) {% endif %}</a>
               {% endif %}  
               <hr>
             {% endfor %}
 
-            //For each phase in the exchange, we need to have a different status / instruction here.
-            //if we don't have an assignment. We sit tight until an assignment is made. If we are past the assignment date, then we throw an error.
-            //if we have an assignment but they haven't done it yet, then we give them a link to upload. etc.
-            //Upload/Edit sketch For Whoever  
+            {% if not active_assignments %} <!--Signed up and the exchange is active, but there isn't an assignment for the user.-->
+              <div class="uk-alert-success" uk-alert>
+                <p>You are confirmed as "{{signup.tag}}" for the {{ signup.exchange.assignment_date|date:'F' }} Exchange.</p>
+                <p>If you don't get your assignment within the next 24 hours, then please email chase@graffexchange.com because something is probably broken.</p>
+              </div>
+            {% endif %}
         {% else %}
           {% if signup %}
-          <div class="uk-alert-success" uk-alert>
+            <div class="uk-alert-success" uk-alert>
               <p>You are confirmed as "{{signup.tag}}" for the {{ signup.exchange.assignment_date|date:'F' }} Exchange.</p>
               <p>Assignments will be given on {{ signup.exchange.start_date|date:"l, M d" }}.</p>
               <p><a href="/confirm_signup/{{user.username}}/{{user.pk}}/">Click here</a> to edit your details for the exchange.</a></p>
@@ -174,11 +183,11 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
           {% endif %}
         {% endif %}
         <!-- <div class="uk-card uk-card-default uk-card-body" uk-scrollspy="cls: uk-animation-slide-right;" style="padding:10px; display:flex; align-items: center; justify-content:center; max-width:750px; "> -->
-        {% if assignments %}
+        {% if past_assignments %}
         <div class="uk-margin-large"></div>
         <hr>
         <h3>Past Works</h3>
-        {% for assignment in assignments %}
+        {% for assignment in past_assignments %}
           <h3 class="uk-margin-large-top">{{assignment.user_signup.tag}} → {{assignment.recipient_signup.tag}}</h3>
           {% if assignment.sketches.all|length == 1 %}
           {% with sketch=assignment.sketches.all.0 %}

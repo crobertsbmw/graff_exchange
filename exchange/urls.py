@@ -6,6 +6,7 @@ from exchange.views import dashboard, signup, december, upload_old, upload_sketc
 urlpatterns = [
     url(r'^$', signup, name='signup'),
     url(r'^dashboard/$', dashboard, name='dashboard'),
+    url(r'^dashboard/(?P<user_pk>\d+)/$', dashboard, name='dashboard_pk'),
     url(r'^december/$', december, name='december'),
     url(r'^upload/(?P<assignment_pk>\d+)/(?P<password>\w+)/$', upload_sketch, name='upload_sketch'),
     url(r'^upload_old/(?P<assignment_pk>\d+)/(?P<password>\w+)/$', upload_old, name='upload_old'),
