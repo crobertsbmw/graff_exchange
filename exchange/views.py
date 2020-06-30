@@ -33,7 +33,7 @@ def dashboard(request, user_pk=None):
     user = request.user
     if user.is_staff and user_pk:
         user = User.objects.get(pk=user_pk)
-        
+
     exchange = Exchange.upcoming()
     signup = None
 
@@ -50,17 +50,15 @@ def dashboard(request, user_pk=None):
         active_assignments = Assignment.objects.filter(user_signup=active_signup)
         print("active ass", active_assignments)
 
-        waiting = 
     past_assignments = Assignment.objects.filter(user=user)
     return render(request, 'dashboard.html', {
         "user": user,
-        "signup": signup,
-        "exchange": exchange,
+        "next_exchange_signup": signup,
+        "next_exchange": exchange,
         "past_assignments": past_assignments,
         "active_exchange": active_exchange,
         "active_signup": active_signup,
         "active_assignments": active_assignments,
-        "waiting": waiting,
     })
 
 def confirm_signup(request, username, user_pk):
